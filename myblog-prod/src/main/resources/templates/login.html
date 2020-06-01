@@ -1,0 +1,258 @@
+
+<!DOCTYPE HTML>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Hxl.blog·login</title>
+	<link rel="shortcut icon" th:href="@{/image/logo.png}"/>
+	<link rel="icon" th:href="@{/image/logo.png}"/>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<meta name="keywords" content="Hxl.blog login" />
+	<meta name="author" content="侯雪林">
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<!-- Meta tag Keywords -->
+
+	<!-- css files -->
+	<link rel="stylesheet" th:href="@{/login/css/style.css}" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link th:href="@{/login/css/font-awesome.min.css}" rel="stylesheet">
+	<link th:href="@{/css/master.css}" rel="stylesheet">
+	<link th:href="@{/layui/css/layui.css}" rel="stylesheet">
+	<link th:href="@{/layui/css/modules/laydate/default/laydate.css}" rel="stylesheet">
+
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //css files -->
+	<!-- web-fonts -->
+	<!--	<link href="//fonts.googleapis.com/css?family=Magra:400,700&amp;subset=latin-ext" rel="stylesheet">-->
+	<!-- //web-fonts -->
+</head>
+
+<body>
+<!-- title -->
+<h1 style="color: floralwhite">
+	<span class="header-logo" style="font-size: 50px; position:relative; left: -20px; color: orangered;">Hxl.blog</span>Login And Register
+</h1>
+<!-- //title -->
+
+<!-- content -->
+<div class="container-agille">
+	<div class="formBox level-login">
+		<div class="box boxShaddow"></div>
+		<div class="box loginBox">
+			<h3>Login Here</h3>
+			<th:block th:if="${registerError != null}">
+				<center style="color: red; font-size: 14px"><i class="layui-icon-cry layui-icon"></i><span style="color: red;font-size: 14px" th:text="${registerError}"></span></center>
+			</th:block>
+			<th:block th:if="${success != null}">
+				<center style="color: red; font-size: 14px"><i class="layui-icon-smile layui-icon"></i><span style="color: red;font-size: 14px" th:text="${success}"></span></center>
+			</th:block>
+			<th:block th:if="${loginError != null}">
+				<center style="color: red; font-size: 14px"><i class="layui-icon-cry layui-icon"></i><span style="color: red;font-size: 14px" th:text="${loginError}"></span></center>
+			</th:block>
+			<form class="form" action="/login" method="post">
+				<div class="f_row-2">
+					<input type="text" class="input-field" placeholder="Username" name="username" required>
+				</div>
+				<div class="f_row-2 last">
+					<input type="password" name="password" placeholder="Password" class="input-field" required>
+				</div>
+				<input class="submit-w3" type="submit" value="Login">
+				<div class="f_link">
+					<a href="" class="resetTag">Forgot your password?</a>
+				</div>
+			</form>
+		</div>
+		<div class="box forgetbox agile">
+			<a href="#" class="back icon-back">
+				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+					 viewBox="0 0 199.404 199.404" style="enable-background:new 0 0 199.404 199.404;" xml:space="preserve">
+						<polygon points="199.404,81.529 74.742,81.529 127.987,28.285 99.701,0 0,99.702 99.701,199.404 127.987,171.119 74.742,117.876 
+			  199.404,117.876 " />
+					</svg>
+			</a>
+			<h3>Reset Password</h3>
+			<form class="form" action="#" method="post">
+				<p>请联系站长进行重置</p>
+				<p>电话：17857330861</p>
+				<p>微信：15186124910</p>
+				<p>qq:1129867908</p>
+				<p>邮箱：17857330861@163.com</p>
+			</form>
+		</div>
+		<div class="box registerBox wthree">
+			<span class="reg_bg"></span>
+			<h3>Register</h3>
+			<form class="form" th:action="@{/register}" method="post" id="registerForm" enctype="multipart/form-data">
+				<div class="f_row-2">
+					<input type="text" class="input-field" placeholder="Username" name="username" required>
+				</div>
+				<div class="f_row-2 last">
+					<input type="text" name="nickName" placeholder="NickName" id="nickname" class="input-field" required>
+				</div>
+				<div class="f_row-2 last">
+					<input type="password" name="password" placeholder="Password" id="password1" class="input-field" required>
+				</div>
+				<div class="f_row-2 last">
+					<input type="password" name="password1" placeholder="Confirm Password" id="password2" class="input-field" required>
+				</div>
+				<div class="f_row-2 last">
+					<input type="tel" name="phone" placeholder="Phone" id="phone" class="input-field" required>
+				</div>
+				<div class="f_row-2 last">
+					<input type="email" name="email" placeholder="Email" id="email" class="input-field" required>
+				</div>
+				<div class="f_row-2 last">
+					<input type="text" name="viliStr" placeholder="请输入验证码" id="valiStr" class="input-field" required>
+				</div>
+				<div class="f_row-2 last">
+					<input class="layui-btn layui-btn-normal input-field" readonly value="发送验证码" id="sendValiStr">
+				</div>
+				<div class="f_row-2 last">
+					<input type="file" name="file" placeholder="请选择头像" id="head" style="display: none" class="input-field file" onchange="openFile()" >
+					<input type="text" onclick="$('#head').click();" readonly placeholder="点击选择头像" class="input-field file showFile" >
+				</div>
+				<style>
+					.registerBox .input-field{
+						width: 45%;
+						padding: 10px;
+						float: left;
+						margin-left: 13px;
+					}
+					.registerBox .file{
+						width: 94%;
+					}
+				</style>
+
+				<input class="submit-w3" type="submit" value="Register">
+			</form>
+		</div>
+		<a href="#" class="regTag icon-add">
+			<i class="fa fa-repeat" aria-hidden="true"></i>
+
+		</a>
+	</div>
+</div>
+<!-- //content -->
+
+<!-- copyright -->
+<!--	<div class="footer-w3ls">-->
+<!--		<h2>&copy; 2018 Validate Login & Register Forms. All rights reserved | Design by-->
+<!--			<a href="http://w3layouts.com">W3layouts</a>-->
+<!--		</h2>-->
+<!--	</div>-->
+<!-- //copyright -->
+
+
+<!-- js files -->
+<!-- Jquery -->
+
+<script th:src="@{/login/js/jquery-2.2.3.min.js}"></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<!-- //Jquery -->
+<!-- input fields js -->
+<script th:src="@{/login/js/input-field.js}"></script>
+<!--	<script th:src="@{/login/js/scrolling-nav.js}"></script>-->
+<!-- //input fields js -->
+
+<!-- password-script -->
+<script>
+	window.onload = function () {
+		document.getElementById("password1").onchange = validatePassword;
+		document.getElementById("password2").onchange = validatePassword;
+		//提交前对邮箱验证码进行验证
+		$("#registerForm").submit(function () {
+			var valiStr = $("#valiStr").val();
+			if (valiStr === ''){
+				alert("请填写验证码");
+				return false;
+			}
+			var res = false;
+			$.ajax({
+				url: "/checkValiStr",
+				async: false,
+				data: {
+					valiStr: valiStr,
+				},
+				method: "post",
+				success: function (data) {
+					if (data === 'ok') {
+						res = true
+					}else if (data === 'null'){
+						res = false;
+						alert("请先发送验证码");
+					}else {
+						res = false;
+						alert("验证码错误");
+					}
+				}
+			});
+			return res;
+		});
+		var sendBtn = $("#sendValiStr");
+		sendBtn.val("发送验证码");
+		//发送验证码
+		sendBtn.click(function () {
+			var email = $("#email").val().trim();
+			if (email === ''){
+				alert("请填写邮箱");
+				return;
+			}
+			$.ajax({
+				url: "/getValiStr",
+				method: "post",
+				data: {
+					email: email
+				},
+				success: function (data) {
+					console.log(data);
+				}
+			});
+			var flag = 60;
+			sendBtn.attr("disabled", "true");
+			sendBtn.removeClass("layui-btn-normal");
+			sendBtn.addClass("layui-btn-disabled");
+			var interval = setInterval(function () {
+				sendBtn.val("重新发送(" + flag-- + "S后)");
+				if(flag === 0){
+					sendBtn.val("发送验证码");
+					sendBtn.removeAttr("disabled");
+					sendBtn.removeClass("layui-btn-disabled");
+					sendBtn.addClass("layui-btn-normal");
+					clearInterval(interval);
+				}
+			}, 1000);
+		});
+	}
+
+
+	function validatePassword() {
+		var pass2 = document.getElementById("password2").value;
+		var pass1 = document.getElementById("password1").value;
+		if (pass1 != pass2)
+			document.getElementById("password2").setCustomValidity("Passwords Don't Match");
+		else
+			document.getElementById("password2").setCustomValidity('');
+		//empty string means no validation error
+	}
+
+	function openFile() {
+		$(".showFile").val($("#head").val());
+	}
+</script>
+<!-- //password-script -->
+<!-- //js files -->
+
+
+</body>
+
+</html>

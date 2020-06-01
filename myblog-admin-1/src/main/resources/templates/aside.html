@@ -1,0 +1,42 @@
+<div  xmlns:th="http://www.thymeleaf.org" th:fragment="ul(class)">
+<aside class="col-sm-3 col-md-2 col-lg-2 sidebar" >
+    <ul class="nav nav-sidebar">
+        <li th:class="${class=='index'?'active':''}"><a th:href="@{~/index}">报告</a></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+        <li th:class="${class=='article'?'active':''}"><a th:href="@{~/article}">文章</a></li>
+        <li th:class="${class=='diary'?'active':''}"><a th:href="@{~/diary/1}">日记</a></li>
+        <li th:class="${class=='comment'?'active':''}"><a th:href="@{~/comment/1}">评论</a></li>
+        <li><a data-toggle="tooltip" data-placement="bottom" title="网站暂无留言功能">留言</a></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+        <li th:class="${class=='category'?'active':''}"><a th:href="@{~/category}">标签</a></li>
+        <li th:class="${class=='flink'?'active':''}"><a class="dropdown-toggle" id="otherMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">其他</a>
+            <ul class="dropdown-menu" aria-labelledby="otherMenu">
+                <li><a th:href="@{~/flink}">友情链接</a></li>
+                <li><a data-toggle="modal" data-target="#areDeveloping">访问记录</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-sidebar">
+        <li th:class="${class=='user'?'active':''}"><a class="dropdown-toggle" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">用户</a>
+            <ul class="dropdown-menu" aria-labelledby="userMenu">
+                <li><a data-toggle="modal" data-target="#areDeveloping">管理用户组</a></li>
+                <li><a th:href="@{~/manage-user}">管理用户</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a th:href="@{~/loginlog}">管理登录日志</a></li>
+            </ul>
+        </li>
+        <li th:class="${class=='setting'?'active':''}"><a class="dropdown-toggle" id="settingMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">设置</a>
+            <ul class="dropdown-menu" aria-labelledby="settingMenu">
+                <li><a th:href="@{~/setting}">基本设置</a></li>
+                <li><a th:href="@{~/readset}">阅读设置</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a data-toggle="modal" data-target="#areDeveloping">安全配置</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="disabled"><a>扩展菜单</a></li>
+            </ul>
+        </li>
+    </ul>
+</aside>
+</div>

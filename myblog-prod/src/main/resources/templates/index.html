@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width" />
+    <meta name="author" content="侯雪林">
+    <title>Hxl.blog·首页</title>
+    <link rel="shortcut icon" th:href="@{/image/logo.png}"/>
+    <link rel="icon" th:href="@{/image/logo.png}"/>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/index_style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/animate.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/index-bg.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<script src="/js/bg/index-bg.js"></script>
+<script>
+    particleBg('body');
+</script>
+<div id="menu" class="hover_animation menu_open" data-mark="false">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+<div id="navgation" class="navgation navgation_close">
+    <ul class="point">
+        <li><a href="#">首页</a></li>
+        <li><a th:href="@{/article}">博客</a></li>
+        <li><a th:href="@{/message}">留言</a></li>
+        <li><a th:href="@{/diary}">日记</a></li>
+        <li><a th:href="@{/link}">友链</a></li>
+        <li><a th:href="@{/about}">关于</a></li>
+    </ul>
+    <div class="logo"><a>Hxl.blog</a></div>
+</div>
+<div class="section" id="section1">
+    <div class="fp-tablecell">
+        <div class="page1">
+            <div class="nav wow zoomIn" data-wow-duration="2s">
+                <h1>Hxl</h1>
+                <p>所有的努力，最终都会绕一个大圈回报给你自己</p>
+                <a class="layui-btn layui-btn-normal" style="margin-top: 20px" href="article">进入博客</a>
+            </div>
+            <a class="next wow fadeInUp" data-wow-duration="2s" id="next"></a>
+        </div>
+    </div>
+</div>
+<div class="section" id="section2">
+    <div class="fp-tablecell">
+        <div class="page2">
+            <div class="warp-box">
+                <div class="new-article">
+                    <div class="inner wow fadeInDown" data-wow-delay=".2s">
+                        <h1>热门文章</h1>
+                        <p>
+                            不论你什么时候开始，重要的是开始了就不要停止
+                            <br>不论你什么时候结束，重要的是结束了就不要悔恨
+                        </p>
+                    </div>
+                </div>
+                <th:block th:if="${top3Blogs != null}">
+                    <div class="layui-row">
+                        <div class="layui-col-xs12 layui-col-sm4 layui-col-md4  wow fadeInUp" th:each="blog : ${top3Blogs}" style="padding: 0 10px">
+                            <div class="single-news">
+                                <div class="news-head">
+                                    <th:block th:if="${blog.displayImage == null}">
+                                        <img src="image/1.jpg">
+                                    </th:block>
+                                    <th:block th:if="${blog.displayImage != null}">
+                                        <img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(blog.displayImage)}">
+                                    </th:block>
+                                    <a th:href="@{/read/{id}(id=${blog.id})}" class="link"><i class="fa fa-link"></i></a>
+                                </div>
+                                <div class="news-content">
+                                    <h4>
+                                        <a th:href="@{/read/{id}(id=${blog.id})}">
+                                            <th:block th:text="${blog.title}"></th:block>
+                                        </a>
+                                    </h4>
+                                    <div class="date" th:text="${(blog.issueDate.getYear() + 1900) + '年' + (blog.issueDate.getMonth() + 1) + '月' + (blog.issueDate.getDate()) + '日&nbsp;&emsp;' + blog.admin.nickName}"></div>
+                                    <p th:text="${blog.description}">
+                                        很想给你写封信,告诉你这里的天气. 昨夜的那场电影,还有我的心情.
+                                    </p>
+                                    <a th:href="@{/read/{id}(id=${blog.id})}" class="btn">
+                                        阅读更多
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section" id="section3">
+    <div class="fp-tablecell">
+        <div class="page3">
+            <div class="warp-box">
+                <div class="warp">
+                    <div class="inner">
+                        <div class="links">
+                            <ul>
+                                <li class="wow fadeInLeft"><a href="about">关于</a></li>
+                                <li class="wow fadeInRight"><a href="link">+友情链接</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="index_footer.html"></th:block>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/wow.min.js}"></script>
+<script th:src="@{/js/index.js}"></script>
+</body>
+</html>

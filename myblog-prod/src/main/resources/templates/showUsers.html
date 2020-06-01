@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bg/p5.min.js}"></script>
+    <script th:src="@{/js/bg/index.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>$Title$</title>
+</head>
+<body>
+
+<div th:if="${admin != null}">
+    id:<th:block th:text="${admin.id}"></th:block><br>
+    adminName:<th:block th:text="${admin.adminName}"></th:block><br>
+    password:<th:block th:text="${admin.password}"></th:block><br>
+    realName:<th:block th:text="${admin.realName}"></th:block><br>
+    phone:<th:block th:text="${admin.phone}"></th:block><br>
+    email:<th:block th:text="${admin.email}"></th:block><br>
+    nickName:<th:block th:text="${admin.nickName}"></th:block><br>
+    head:<img th:src="${'data:image/jpeg;base64,' + e.encode(admin.head)}">
+    <img th:src="@{/image/1.jpg}">
+</div>
+
+<th:block th:text="${adminName}"></th:block>
+
+<img th:src="${'data:image/jpeg;base64,' + bs64}">
+
+<!--<th:block th:text="${date.getMonth()}"></th:block>-->
+<!--<th:block th:text="${date.getYear() + 1900}"></th:block>-->
+<!--<th:block th:text="${date.getDate()}"></th:block>-->
+<!--<th:block th:text="${date.hours}"></th:block>-->
+<!--<th:block th:text="${date.minutes}"></th:block>-->
+<!--<th:block th:text="${date.seconds}"></th:block>-->
+<!--<th:block th:text="${date.time}"></th:block>-->
+
+
+
+
+<th:block th:if="${errorSelect eq null}">
+    <center>
+        <table border="1">
+            <tr>
+                <th>No</th>
+                <th>id</th>
+                <th>Username</th>
+                <th>Password</th>
+            </tr>
+            <!--suppress ALL-->
+            <tr th:each="user, status : ${users}">
+                <td th:text="${status.count}"></td>
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.password}"></td>
+                <td th:text="${user}"></td>
+            </tr>
+        </table>
+        <div class="row" th:each="user, status : ${users1}">
+            <div class="col-md-2" th:text="${status.count}"></div>
+            <div class="col-md-2" th:text="${user.id}"></div>
+            <div class="col-md-4" th:text="${user.username}"></div>
+            <div class="col-md-4" th:text="${user.password}"></div>
+        </div>
+    </center>
+</th:block>
+<th:block th:if="${errorSelect != null}">
+    出错了: <font color="red" th:text="${errorSelect}"></font>
+</th:block>
+<div th:include="/select.html">
+
+</div>
+</body>
+</html>

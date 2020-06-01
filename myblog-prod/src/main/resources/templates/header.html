@@ -1,0 +1,42 @@
+<div class="header">
+</div>
+<header class="gird-header">
+    <div class="header-fixed">
+        <div class="header-inner">
+            <a href="javascript:void(0)" class="header-logo" id="logo">Hxl.blog</a>
+            <nav class="nav" id="nav">
+                <ul>
+                    <li><a th:href="@{/index}">首页</a></li>
+                    <li><a th:href="@{/article}">博客</a></li>
+                    <li><a th:href="@{/message}">留言</a></li>
+                    <li><a th:href="@{/diary}">日记</a></li>
+                    <li><a th:href="@{/link}">友链</a></li>
+                    <li><a th:href="@{/about}">关于</a></li>
+                </ul>
+            </nav>
+
+            <th:block th:if="${#session.getAttribute('user') != null}">
+                <a href="javascript:void(0);" class="blog-user loginout">
+                    <img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(#session.getAttribute('user').head)}"/>
+                    <span class="username" style="font-size: 14px" th:text="${#session.getAttribute('user').nickName}">
+                    </span>
+                    <i class="layui-icon layui-icon-close-fill"></i>
+                    <input id="userid" hidden th:value="${#session.getAttribute('user') != null  ? #session.getAttribute('user').id :0}">
+                </a>
+
+                <script th:src="@{/js/jquery.min.js}"></script>
+                <script th:src="@{/layui/layui.js}"></script>
+            </th:block>
+            <th:block th:if="${#session.getAttribute('user') == null}">
+                <a href="/toLoginPage" class="blog-user login">
+                    <i class="fa fa-user"></i><span style="font-size: 14px">请登录</span>
+                </a>
+            </th:block>
+            <a class="phone-menu">
+                <i></i>
+                <i></i>
+                <i></i>
+            </a>
+        </div>
+    </div>
+</header>

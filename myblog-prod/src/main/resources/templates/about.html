@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width" />
+	<meta name="author" content="侯雪林" />
+	<meta name="robots" content="all" />
+	<title>Hxl.blog·文章</title>
+	<link rel="shortcut icon" th:href="@{/image/logo.png}"/>
+	<link rel="icon" th:href="@{/image/logo.png}"/>
+	<link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+	<link rel="stylesheet" th:href="@{/layui/css/layui.css}" />
+	<link rel="stylesheet" th:href="@{/css/master.css}" />
+	<link rel="stylesheet" th:href="@{/css/gloable.css}" />
+	<link rel="stylesheet" th:href="@{/css/nprogress.css}" />
+
+	<link th:href="@{/about/css/bootstrap.css}" rel="stylesheet">
+	<link th:href="@{/about/css/blog.css}" rel="stylesheet">
+
+	<!--背景动画效果-->
+	<script th:src="@{/js/bg/p5.min.js}"></script>
+	<script th:src="@{/js/bg/index.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body style="background-color: transparent;">
+<th:block th:include="header.html">
+</th:block>
+<div class="doc-container" id="doc-container">
+	<div class="container-fixed">
+		<div class="col-content">
+			<div class="inner" style="background-color: white">
+				<div class="blog-masthead">
+					<div class="container">
+						<nav class="blog-nav">
+							<a class="blog-nav-item active" href="#top">head</a>
+							<a class="blog-nav-item" href="#part1">个人信息</a>
+							<a class="blog-nav-item" href="#part2">关于本站</a>
+							<a class="blog-nav-item" href="#part3">其他</a>
+						</nav>
+					</div>
+				</div>
+				<div class="intr" id="top">
+					<span class="avtar"></span>
+					<p class="peointr">Hxl</p>
+					<p class="peointr">所有的努力，最终都会绕一个大圈回报给你自己</p>
+				</div>
+				<div class="title" id="part1">个人信息</div>
+				<div class="content">
+					<style>
+						.content{
+							padding-left: 50px;
+						}
+						.my-title{
+							font-size:20px;
+							font-weight:bold
+						}
+						.individual-intro li{
+							margin: 10px 0;
+						}
+						.individual-intro li table{
+							width: 70%;
+						}
+						.individual-intro li table tr{
+							margin-top: 30px;
+						}
+						.individual-intro li table td{
+							width: 45%;
+							padding: 20px 30px 10px;
+						}
+						code{
+							background-color: ghostwhite;
+							color: darkred;
+						}
+						.active p{
+							font-size: 16px;
+							letter-spacing: 1px;
+							color: darkred;
+						}
+					</style>
+					<ul class="individual-intro">
+						<li>
+							<i class="layui-icon-note layui-icon"></i>
+							<span class="my-title">个人技能</span>
+							<table>
+								<tr><td>HTML5 +CSS3</td><td>简单使用</td></tr>
+								<tr><td>Java</td><td>简单使用</td></tr>
+								<tr><td>Js</td><td>简单使用</td></tr>
+								<tr><td>Jquery</td><td>简单使用</td></tr>
+								<tr><td>Mysql</td><td>简单使用</td></tr>
+							</table>
+						</li>
+						<li>
+							<i class="layui-icon-note layui-icon"></i>
+							<span class="my-title">工作经验</span>
+							<table>
+								<tr><td>暂无</td></tr>
+							</table>
+						</li>
+						<li>
+							<i class="layui-icon-note layui-icon"></i>
+							<span class="my-title">教育背景</span>
+							<table>
+								<tr><td>2014-2017</td><td>贵州省大方县第三中学</td></tr>
+								<tr><td>2017至今</td><td>浙江工业大学</td></tr>
+							</table>
+						</li>
+					</ul>
+				</div>
+				<div class="title" id="part2">关于本站</div>
+				<div class="content">
+					<p>本站构建于2020-5，系统设计的期末作业，感谢<a href="https://www.yanshisan.cn" target="_blank">燕十三</a>分享的前端界面模板</p>
+					<br>
+					<p>使用到的技术：</p>
+					<p>前端：<code>HTML + CSS3 + js + jquery</code></p>
+					<p>后端：<code>SpringBoot + Mybatis + Thymeleaf</code></p>
+				</div>
+				<div class="title" id="part3">其他</div>
+				<div class="content">
+					<ul class="nav nav-tabs" role="tablist">
+						<li class="active"><a href="#home" role="tab" data-toggle="tab">爱好</a></li>
+						<li><a href="#profile" role="tab" data-toggle="tab">获得荣誉</a></li>
+						<li><a href="#messages" role="tab" data-toggle="tab">联系我</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="home">
+							<p><i class="layui-icon layui-icon-face-surprised"></i>吃饭</p>
+							<p><i class="layui-icon layui-icon-cry"></i>睡觉</p>
+							<p><i class="layui-icon layui-icon-console"></i>撸代码</p>
+						</div>
+						<div class="tab-pane" id="profile">
+							<p>啥也没有……<i class="layui-icon layui-icon-cry"></i></p>
+						</div>
+						<div class="tab-pane" id="messages">
+							<p>电话：17857330861</p>
+							<p>微信：15186124910</p>
+							<p>QQ  :1129867908</p>
+							<p>邮箱：17857330861@163.com</p>
+						</div>
+					</div>
+				</div>
+				<a href="#top" class="layui-icon layui-icon-top btt"></a>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block th:include="main_footer.html"></th:block>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/yss/gloable.js}"></script>
+<script th:src="@{/js/plugins/nprogress.js}"></script>
+<script>NProgress.start();</script>
+<script th:src="@{/js/yss/article.js}"></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--<script th:src="@{/about/js/jquery-1.9.1.min.js}"></script>-->
+<script th:src="@{/about/js/bootstrap.min.js}"></script>
+<script th:src="@{/about/js/plugin.js}"></script>
+
+<script>
+	window.onload = function () {
+		NProgress.done();
+	};
+</script>
+</body>
+</html>

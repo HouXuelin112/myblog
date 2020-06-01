@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width" />
+	<meta name="author" content="侯雪林" />
+	<meta name="robots" content="all" />
+	<title>Hxl.blog·文章</title>
+	<link rel="shortcut icon" th:href="@{/image/logo.png}"/>
+	<link rel="icon" th:href="@{/image/logo.png}"/>
+	<link rel="stylesheet" th:href="@{/font-awesome/css/font-awesome.min.css}">
+	<link rel="stylesheet" th:href="@{/layui/css/layui.css}" />
+	<link rel="stylesheet" th:href="@{/css/master.css}" />
+	<link rel="stylesheet" th:href="@{/css/gloable.css}" />
+	<link rel="stylesheet" th:href="@{/css/nprogress.css}" />
+	<link rel="stylesheet" th:href="@{/css/blog.css}" />
+
+	<!--背景动画效果-->
+	<script th:src="@{/js/bg/p5.min.js}"></script>
+	<script th:src="@{/js/bg/index.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<th:block th:include="header.html">
+</th:block>
+<div class="doc-container" id="doc-container">
+	<div class="container-fixed">
+		<div class="col-content">
+			<div class="inner">
+				<article class="article-list bloglist" id="LAY_bloglist" >
+					<th:block th:if="${topBlogs != null}">
+						<th:block th:each="topBlog : ${topBlogs}">
+							<section class="article-item zoomIn article">
+								<div class="fc-flag">置顶</div>
+								<h5 class="title">
+									<th:block th:if="${topBlog.isOriginal == 1}">
+										<span class="fc-blue">【原创】</span>
+									</th:block>
+									<a th:href="@{/read/{id}(id = ${topBlog.id})}" th:text="${topBlog.title}">.NET Spire.Doc组件</a>
+								</h5>
+								<div class="time">
+									<span class="day" th:text="${topBlog.issueDate.date}">21</span>
+									<span class="month fs-18"><th:block th:text="${topBlog.issueDate.month + 1}"></th:block><span class="fs-14">月</span></span>
+									<span class="year fs-18 ml10" th:text="${topBlog.issueDate.year + 1900}">2019</span>
+								</div>
+								<div class="content">
+									<a th:href="@{/read/{id}(id = ${topBlog.id})}" class="cover img-light">
+
+										<th:block th:if="${topBlog.displayImage == null}">
+											<img src="image/cover/2019121192339714.png">
+										</th:block>
+										<th:block th:if="${topBlog.displayImage != null}">
+											<img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(topBlog.displayImage)}">
+										</th:block>
+									</a>
+									<th:block th:text="${topBlog.description}"></th:block>
+								</div>
+								<div class="read-more">
+									<a th:href="@{/read/{id}(id = ${topBlog.id})}" class="fc-black f-fwb">继续阅读</a>
+								</div>
+								<aside class="f-oh footer">
+									<div class="f-fl tags">
+										<span class="fa fa-tags fs-16"></span>
+										<a class="tag" th:text="${topBlog.tag.tagName}">ASP.NET MVC</a>
+									</div>
+									<div class="f-fr">
+									<span class="read">               
+										<i class="fa fa-eye fs-16"></i>               
+										<i class="num" th:text="${topBlog.visitCount}">57</i>
+									</span>
+										<span class="ml20">
+										<i class="fa fa-comments fs-16"></i>               
+										<a href="javascript:void(0)" class="num fc-grey" th:text="${topBlog.commentsCount}">1</a>
+									</span>
+									</div>
+								</aside>
+							</section>
+						</th:block><!--each-->
+					</th:block><!--if-->
+					<th:block th:if="${notTopBlogs != null}">
+						<th:block th:each="notTopBlog : ${notTopBlogs}">
+							<section class="article-item zoomIn article">
+								<h5 class="title">
+									<th:block th:if="${notTopBlog.isOriginal == 1}">
+										<span class="fc-blue">【原创】</span>
+									</th:block>
+									<a th:href="@{/read/{id}(id = ${notTopBlog.id})}" th:text="${notTopBlog.title}">.NET Spire.Doc组件</a>
+								</h5>
+								<div class="time">
+									<span class="day" th:text="${notTopBlog.issueDate.date}">21</span>
+									<span class="month fs-18"><th:block th:text="${notTopBlog.issueDate.month + 1}"></th:block><span class="fs-14">月</span></span>
+									<span class="year fs-18 ml10" th:text="${notTopBlog.issueDate.year + 1900}">2019</span>
+								</div>
+								<div class="content">
+									<a th:href="@{/read/{id}(id = ${notTopBlog.id})}" class="cover img-light">
+										<th:block th:if="${notTopBlog.displayImage == null}">
+											<img src="image/cover/2019121192339714.png">
+										</th:block>
+										<th:block th:if="${notTopBlog.displayImage != null}">
+											<img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(notTopBlog.displayImage)}">
+										</th:block>
+									</a>
+									<th:block th:text="${notTopBlog.description}"></th:block>
+								</div>
+								<div class="read-more">
+									<a th:href="@{/read/{id}(id = ${notTopBlog.id})}" class="fc-black f-fwb">继续阅读</a>
+								</div>
+								<aside class="f-oh footer">
+									<div class="f-fl tags">
+										<span class="fa fa-tags fs-16"></span>
+										<a class="tag" th:text="${notTopBlog.tag.tagName}">ASP.NET MVC</a>
+									</div>
+									<div class="f-fr">
+									<span class="read">
+										<i class="fa fa-eye fs-16"></i>
+										<i class="num" th:text="${notTopBlog.visitCount}">57</i>
+									</span>
+										<span class="ml20">
+										<i class="fa fa-comments fs-16"></i>
+										<a href="javascript:void(0)" class="num fc-grey" th:text="${notTopBlog.commentsCount}">1</a>
+									</span>
+									</div>
+								</aside>
+							</section>
+						</th:block><!--each-->
+					</th:block><!--if-->
+				</article>
+			</div>
+		</div>
+		<div class="col-other">
+			<div class="inner">
+				<div class="other-item" id="categoryandsearch">
+					<div class="search">
+						<label class="search-wrap">
+							<input type="text" id="searchtxt" placeholder="输入关键字搜索" />
+							<input id="searchId" hidden>
+							<span class="search-icon">
+					                <i class="fa fa-search"></i>
+					            </span>
+						</label>
+						<ul class="search-result">
+
+						</ul>
+					</div>
+					<ul class="category mt20" id="category">
+						<li data-index="0" class="slider"></li>
+						<li data-index="1"><a th:href="@{/article}">全部文章</a></li>
+						<th:block th:if="${tags != null}">
+							<th:block th:each="tag,status : ${tags}">
+								<li class="myli" th:value="${status.count + 1}"><a th:href="@{/article/{tagid}(tagid=${tag.id})}" th:text="${tag.tagName}"></a></li>
+							</th:block>
+						</th:block>
+						<script th:src="@{/js/jquery.min.js}"></script>
+						<script th:inline="javascript">
+							$(".myli").each(function () {
+								var dataIndex = this.value;
+								console.log(dataIndex);
+								$(this).attr("data-index", dataIndex);
+							})
+						</script>
+					</ul>
+				</div>
+				<!--右边悬浮 平板或手机设备显示-->
+				<div class="category-toggle"><i class="layui-icon">&#xe603;</i></div>
+				<div class="article-category">
+					<div class="article-category-title">分类导航</div>
+					<th:block th:if="${tags != null}">
+						<th:block th:each="tag : ${tags}">
+							<a th:href="@{/article/{tagid}(tagid=${tag.id})}" th:text="${tag.tagName}"></a>
+						</th:block>
+					</th:block>
+					<div class="f-cb"></div>
+				</div>
+				<!--遮罩-->
+				<div class="blog-mask animated layui-hide"></div>
+				<div class="other-item">
+					<h5 class="other-item-title">热门文章</h5>
+					<div class="inner">
+						<ul class="hot-list-article">
+							<th:block  th:each="hotTop10Blog : ${hotTop10Blogs}">
+								<li><a th:href="@{/read/{id}(id=${hotTop10Blog.id})}" th:text="${hotTop10Blog.title}"></a></li>
+							</th:block>
+						</ul>
+					</div>
+				</div>
+				<div class="other-item">
+					<h5 class="other-item-title">置顶推荐</h5>
+					<div class="inner">
+						<ul class="hot-list-article">
+							<th:block  th:each="topBlog : ${topBlogs}">
+								<li> <a th:href="@{/read/{id}(id=${topBlog.id})}" th:text="${topBlog.title}">.NET Spire.Doc组件</a></li>
+							</th:block>
+						</ul>
+					</div>
+				</div>
+				<div class="other-item">
+					<h5 class="other-item-title">最近访客</h5>
+					<div class="inner">
+						<dl class="vistor">
+							<th:block th:if="${recentVisitors != null}">
+								<dd th:each="recentVisitor : ${recentVisitors}"><a href="javasript:;"><img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(recentVisitor.head)}"><cite th:text="${recentVisitor.nickName}"></cite></a></dd>
+							</th:block>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<th:block th:include="main_footer.html"></th:block>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/yss/gloable.js}"></script>
+<script th:src="@{/js/plugins/nprogress.js}"></script>
+<script>NProgress.start();</script>
+<script th:src="@{/js/yss/article.js}"></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/search.js}"></script>
+
+<script>
+	window.onload = function () {
+		NProgress.done();
+	};
+</script>
+</body>
+</html>

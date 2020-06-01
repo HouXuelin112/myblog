@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+
+<center>
+    <form th:action="@{/common/uploadNeedImg}" method="post" enctype="multipart/form-data">
+        <input type="file" placeholder="请输入需要查讯的用户id" name="upload">
+        <input type="submit" value="查询">
+    </form>
+</center>
+
+</body>
+</html>

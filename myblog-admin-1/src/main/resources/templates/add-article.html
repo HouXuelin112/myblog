@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>写文章 - Hxl.blog后台管理</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/style.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/font-awesome.min.css}">
+  <link rel="apple-touch-icon-precomposed" th:href="@{/images/logo.png}">
+  <link rel="shortcut icon" th:href="@{/images/logo.png}">
+<!--  <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">-->
+<!--  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap-markdown/css/htmleaf-demo.css}">-->
+
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap-markdown/css/bootstrap-markdown.min.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap-markdown/css/markdown.css}">
+
+
+  <script th:src="@{/bootstrap/js/jquery-2.1.4.min.js}"></script>
+  <!--[if gte IE 9]>
+  <script th:src="@{/bootstrap/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+  <script th:src="@{/bootstrap/js/html5shiv.min.js}" type="text/javascript"></script>
+  <script th:src="@{/bootstrap/js/respond.min.js}" type="text/javascript"></script>
+  <script th:src="@{/bootstrap/js/selectivizr-min.js}" type="text/javascript"></script>
+  <![endif]-->
+  <!--[if lt IE 9]>
+  <script>window.location.href='upgrade-browser.html';</script>
+  <![endif]-->
+</head>
+
+<body class="user-select">
+<section class="container-fluid">
+  <th:block th:include="header.html"></th:block>
+  <div class="row">
+    <th:block th:include="aside.html::ul(class='article')"></th:block>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
+      <div class="row">
+        <form action="/blog/add" method="post" class="add-article-form" id="uploadBlog" enctype="multipart/form-data">
+          <div class="col-md-9">
+            <h1 class="page-header">撰写新文章</h1>
+            <div class="form-group">
+              <label for="article-title" class="sr-only">标题</label>
+              <input type="text" id="article-title" name="title" class="form-control" placeholder="在此处输入标题" required autofocus autocomplete="off">
+              <input type="text" id="article-filename" name="filename" class="sr-only">
+            </div>
+            <div class="form-group">
+              <label for="editor-zh" class="sr-only">内容</label>
+
+              <textarea id="editor-zh" name="content" rows="10" style="padding: 5px 20px; min-height: 500px"></textarea>
+            </div>
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span>描述</span></h2>
+              <div class="add-article-box-content">
+                <textarea class="form-control" name="description" autocomplete="off"></textarea>
+                <span class="prompt-text">描述是可选的手工创建的内容总结，并可以在网页描述中使用</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <h1 class="page-header">操作</h1>
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span class="col-sm-11">标签</span><a th:href="@{/category}" style="text-align: right"><span class="glyphicon glyphicon-plus"></span></a></h2>
+              <div class="add-article-box-content">
+                <ul class="category-list" th:if="${tags != null}">
+                  <li th:each="tag : ${tags}">
+                    <label>
+                      <input name="tag.id" type="radio" th:value="${tag.id}" checked>
+                      <th:block th:text="${tag.tagName}"></th:block> <em class="hidden-md">( 标签ID: <span th:text="${tag.id}"></span> )</em></label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span>上传文件所需图片</span></h2>
+              <div class="add-article-box-content">
+                <input type="text" class="form-control" name="needImg" id="needImg" placeholder="点击选择图片" maxlength="18" autocomplete="off" />
+                <input type="file" id="needImgFile" class="sr-only" name="needImgFile" accept=".png,.jpg,.gif,.svg,.jpeg">
+                <img src="" style="width: 100%; margin: 5px auto" class="img-rounded hidden" id="uploadImg">
+                <input type="text" class="form-control sr-only" id="displayImgPath">
+              </div>
+              <div class="add-article-box-footer">
+                <button class="btn btn-primary" readonly="true" type="button" ID="upNeedImg">上传</button>
+              </div>
+              <script>
+                $("#upNeedImg").click(function () {
+                    var file = $("#needImgFile")[0].files[0];
+                    console.log(file.name);
+                    var formData = new FormData();
+                    formData.append("upload", file);
+                    $.ajax({
+                      url: "http://127.0.0.1:8080/common/uploadNeedImg",
+                      method: "post",
+                      processData: false,
+                      contentType: false,
+                      dataType: "text",
+                      data: formData,
+                      success: function (data) {
+                        $("#displayImgPath").val(data);
+                        $("#displayImgPath").removeClass("sr-only");
+                      }
+                    })
+                });
+                $("#needImgFile").on("change", function (e) {
+                  var file = e.target.files[0];
+                  var reader = new FileReader();
+                  reader.readAsDataURL(file);
+                  $("#needImg").val(file.name);
+                  reader.onload = function(ev) {
+                    $("#upNeedImg").removeAttr("readonly");
+                    $("#uploadImg").attr("src", ev.target.result);
+                    $("#uploadImg").removeClass("hidden");
+                  }
+                })
+                $("#needImg").click(function () {
+                  $("#needImgFile").click();
+                });
+              </script>
+            </div>
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span>标题图片</span></h2>
+              <div class="add-article-box-content">
+                <input type="text" class="form-control" required placeholder="点击选择展示图片" id="displayImg" name="displayImg" autocomplete="off">
+                <input type="file" class="form-control sr-only" id="displayImgFile" accept=".png,.jpg,.gif,.svg,.jpeg">
+                <input type="text" class="sr-only" id="displayBase64" name="displayBase64">
+                <img src="" style="width: 100%; margin: 5px auto" class="img-rounded hidden" id="display">
+              </div>
+              <script>
+                $("#displayImgFile").on("change", function (e) {
+                  var file = e.target.files[0];
+                  var reader = new FileReader();
+                  $("#displayImg").val(file.name);
+                  reader.readAsDataURL(file);
+                  reader.onload = function (ev) {
+                    var res = ev.target.result;
+                    $("#display").attr("src", res);
+                    $("#display").removeClass("hidden");
+                    var base64 = res.substring(res.indexOf(",") + 1);
+                    $("#displayBase64").val(base64);
+                  }
+                });
+                $("#displayImg").click(function () {
+                  $("#displayImgFile").click();
+                });
+              </script>
+            </div>
+            <div class="add-article-box">
+              <h2 class="add-article-box-title"><span>发布</span></h2>
+              <div class="add-article-box-content">
+                <p><label>是否原创：</label><input type="radio" name="isOriginal" value="1" checked/>是 <input type="radio" name="isOriginal" value="0" />否</p>
+                <p><label>是否置顶：</label><input type="radio" name="isTop" value="1" checked/>是 <input type="radio" name="isTop" value="0" />否</p>
+                <p class="form-inline"><label>作者：</label><span class="article-time-display">
+                <select class="form-control" name="admin.id">
+                  <option th:each="admin: ${admins}" th:value="${admin.id}" th:text="${admin.realName}"></option>
+                </select>
+                </span>
+              </p>
+              </div>
+              <div class="add-article-box-footer">
+                <button class="btn btn-primary" type="submit" name="submit">发布</button>
+              </div>
+              <script>
+                $("#uploadBlog").submit(function () {
+                  var content = $("#editor-zh").val();
+                  var title = $("#article-title").val();
+                  var res = false;
+                  $.ajax({
+                    url: "http://127.0.0.1:8080/common/addBlog",
+                    method: "post",
+                    async: false,
+                    data: {
+                      content: content,
+                      title: title
+                    },
+                    success: function (data) {
+                      $("#article-filename").val(data);
+                      console.log(data);
+                      res = true;
+                    }
+                  })
+                  return res;
+                });
+              </script>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/bootstrap/js/admin-scripts.js}"></script>
+<script th:src="@{/bootstrap-markdown/js/marked.js}"></script>
+<!--<script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>-->
+<script>window.jQuery || document.write('<script th:src="@{/bootstrap-markdown/js/jquery-1.11.0.min.js}"><\/script>')</script>
+<!--<script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+<script type="text/javascript" th:src="@{/bootstrap-markdown/js/bootstrap-markdown.js}"></script>
+<script type="text/javascript" th:src="@{/bootstrap-markdown/locale/bootstrap-markdown.zh.js}"></script>
+<script type="text/javascript">
+  $(function(){
+    $("#editor-zh").markdown({
+      language:'zh',
+      autofocus: true,
+      // savable: true,
+      // onSave: function (e) {
+      //   console.log(e.getContent());
+      // }
+    })
+  })
+</script>
+</body>
+</html>

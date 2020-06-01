@@ -1,0 +1,59 @@
+<li th:each="comment : ${comments}">
+    <div class="comment-parent">
+        <a th:name="${comment.id}"></a>
+        <img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(comment.user.head)}" th:alt="${comment.user.nickName}">
+        <div class="info">
+            <span class="username" th:text="${comment.user.nickName}"></span>
+        </div>
+        <div class="comment-content" th:id="${'comments' + comment.id}">
+
+        </div>
+        <script th:inline="javascript">
+            id = "#comments" + [[${comment.id}]];
+            $(id).html(marked([[${comment.commentContent}]]));
+        </script>
+        <p class="info info-footer">
+            <span class="comment-time" th:text="${(comment.issueDate.year + 1900) + '/' + (comment.issueDate.month + 1) + '/' + comment.issueDate.date + ' ' + comment.issueDate.hours + ':' + comment.issueDate.minutes + ':' + comment.issueDate.seconds}">2020/5/14 9:52:20</span>
+            <a href="javascript:;" class="btn-reply" data-targetid="" data-targetname="Réalisme。">回复</a>
+            <input hidden th:value="${comment.user.nickName}" type="text">
+            <input hidden th:value="${comment.user.id}" type="text">
+            <input hidden th:value="${comment.id}" type="text">
+        </p>
+    </div>
+
+    <th:block th:if="${comment.childComments != null}">
+        <th:block th:each="childComment: ${comment.childComments}">
+            <hr>
+            <div class="comment-child">
+                <a name="reply-162"></a>
+                <img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(childComment.user.head)}" th:alt="${childComment.user.nickName}">
+                <div class="info">
+                    <span class="username" th:text="${childComment.user.nickName}">゛浮浅</span>
+                    <span style="padding-right:0;margin-left:-5px;">回复</span>
+                    <span class="username" th:text="${childComment.toUser.nickName}">゛浮浅</span>
+                    <span th:text="${childComment.commentContent}">哦吼</span>
+                </div>
+                <p class="info">
+                    <span class="comment-time" th:text="${(childComment.issueDate.year + 1900) + '/' + (childComment.issueDate.month + 1) + '/' + childComment.issueDate.date + ' ' + childComment.issueDate.hours + ':' + childComment.issueDate.minutes + ':' + childComment.issueDate.seconds}">2020/5/3 14:15:09</span>
+                    <a href="javascript:;" class="btn-reply" data-targetid="440" data-targetname="゛浮浅">回复</a>
+                    <input hidden th:value="${childComment.user.nickName}" type="text">
+                    <input hidden th:value="${childComment.user.id}" type="text">
+                    <input hidden th:value="${comment.id}" type="text">
+                </p>
+            </div>
+        </th:block>
+    </th:block>
+    <div class="replycontainer layui-hide">
+        <form class="layui-form" action="">
+            <input type="hidden" name="toUserId" value="165">
+            <input type="hidden" name="parentId" value="0">
+            <input type="hidden" name="blogId" th:value="${blogId}">
+            <div class="layui-form-item">
+                <textarea name="replyContent" lay-verify="replyContent" placeholder="请输入回复内容" class="layui-textarea" style="min-height:80px;"></textarea>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn layui-btn-xs" lay-submit="formReply" lay-filter="formReply">提交</button>
+            </div>
+        </form>
+    </div>
+</li>
