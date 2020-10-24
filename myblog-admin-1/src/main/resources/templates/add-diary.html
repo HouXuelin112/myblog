@@ -30,16 +30,16 @@
     <th:block th:include="aside.html::ul(class='diary')"></th:block>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
       <div class="row">
-        <form action="test.php" method="post" class="add-article-form">
+        <form th:action="@{/diary/add}" id="diaryForm" method="post" class="add-article-form" enctype="multipart/form-data">
           <div class="col-md-9">
             <h1 class="page-header">撰写新日记</h1>
             <div class="form-group">
-              <label for="article-title" class="sr-only">标题</label>
-              <input type="text" id="article-title" name="title" class="form-control" placeholder="在此处输入标题" required autofocus autocomplete="off">
+              <label for="diaryTitle" class="sr-only">标题</label>
+              <input type="text" id="diaryTitle" name="title" class="form-control" placeholder="在此处输入标题" required autofocus autocomplete="off">
             </div>
             <div class="form-group">
               <label for="article-content" class="sr-only">内容</label>
-              <textarea id="article-content" name="content" class="form-control"></textarea>
+              <textarea id="article-content" name="diaryContent" class="form-control"></textarea>
             </div>
           </div>
           <div class="col-md-3">
@@ -48,7 +48,7 @@
               <h2 class="add-article-box-title"><span>发布</span></h2>
               <div class="add-article-box-content">
                 <input type="text" class="form-control" required placeholder="点击选择展示图片" id="displayImg" name="displayImg" autocomplete="off">
-                <input type="file" class="form-control sr-only" id="displayImgFile" accept=".png,.jpg,.gif,.svg,.jpeg">
+                <input type="file" name="display" class="form-control sr-only" id="displayImgFile" accept=".png,.jpg,.gif,.svg,.jpeg">
 <!--                <input type="text" class="sr-only" id="displayBase64" name="displayBase64">-->
                 <img src="" style="width: 100%; margin: 5px auto" class="img-rounded hidden" id="display">
               </div>
@@ -87,6 +87,12 @@
 <script>
   $('#article-content').summernote({
     lang: 'zh-CN'
+  });
+
+  $("#diaryForm").submit(function () {
+    var content = $('#article-content').summernote("code");
+    console.log(content);
+    return true;
   });
 </script>
 </body>

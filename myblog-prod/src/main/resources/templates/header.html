@@ -16,13 +16,41 @@
             </nav>
 
             <th:block th:if="${#session.getAttribute('user') != null}">
-                <a href="javascript:void(0);" class="blog-user loginout">
+                <a href="javascript:void(0);" class="blog-user out" id="out">
                     <img th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(#session.getAttribute('user').head)}"/>
                     <span class="username" style="font-size: 14px" th:text="${#session.getAttribute('user').nickName}">
                     </span>
                     <i class="layui-icon layui-icon-close-fill"></i>
                     <input id="userid" hidden th:value="${#session.getAttribute('user') != null  ? #session.getAttribute('user').id :0}">
                 </a>
+                <div class="operation_dialog">
+                    <ul>
+                        <li data-method="notice" class="toPersonalInfo"><img th:src="@{~/image/user.png}"/> 个人信息</li>
+                        <li class="loginout"><img th:src="@{~/image/exit.png}"/>退出登陆</li>
+                    </ul>
+                </div>
+                <div class="personal_info_container">
+                    <input type="text" th:value="${#session.getAttribute('user').id}" class="p_id" hidden/>
+                    <div class="infos">
+                        <table>
+                            <tr><td>登录名：</td><td class="my_read_only"><th:block th:text="${#session.getAttribute('user').username}" /></td></tr>
+                            <tr><td>昵称：</td><td><input type="text" th:value="${#session.getAttribute('user').nickName}" class="p_nickname"/></td></tr>
+                            <tr><td>旧密码：</td><td><input type="password" placeholder="输入旧密码以修改密码" class="p_old_password" value=""/></td></tr>
+                            <tr><td>新密码：</td><td class="my_read_only"><input type="password" class="p_new_password" readonly hidden value=""/></td></tr>
+                            <tr><td>确认新密码：</td><td class="my_read_only"><input type="password" class="p_confirm_new_password" readonly hidden value=""/></td></tr>
+                            <tr><td>电话：</td><td><input type="text" th:value="${#session.getAttribute('user').phone}" class="p_phone"/></td></tr>
+                            <tr><td>邮箱：</td><td><input type="text" th:value="${#session.getAttribute('user').email}" class="p_email"/></td></tr>
+                            <tr><td>出生日期：</td><td><input type="date" th:value="${#session.getAttribute('user').birthday != null ? ((#session.getAttribute('user').birthday.getYear() + 1900) + '-' + ((#session.getAttribute('user').birthday.getMonth() + 1) < 10 ? '0' + (#session.getAttribute('user').birthday.getMonth() + 1) : (#session.getAttribute('user').birthday.getMonth() + 1))+ '-' + (#session.getAttribute('user').birthday.getDate() < 10 ? '0' + #session.getAttribute('user').birthday.getDate() : #session.getAttribute('user').birthday.getDate())) : ''}" class="p_birthday"/></td></tr>
+                            <tr><td>年龄：</td><td class="p_age"><th:block th:text="${#session.getAttribute('user').age}"></th:block></td></tr>
+                            <tr><td>头像：</td><td><input type="text" style="width: 30%;" name="headC" class="headC" placeholder="点击更换头像" maxlength="18" autocomplete="off" />
+                                <input type="file" class="file" hidden>
+                                <input type="text"  hidden class="headBase64" name="headBase64">
+                                <img class="headImg" style="width: 100px; height: 100px; border-radius: 50%; margin-left: 20px;vertical-align: middle" th:src="${'data:image/png;base64,' + base64Encoder.encode(#session.getAttribute('user').getHead())}"></td></tr>
+                            <tr><td>注册日期：</td><td class="my_read_only"><th:block th:text="${(#session.getAttribute('user').registerDate.getYear() + 1900) + '-' + ((#session.getAttribute('user').registerDate.getMonth() + 1) < 10 ? '0' + (#session.getAttribute('user').registerDate.getMonth() + 1) : (#session.getAttribute('user').registerDate.getMonth() + 1)) + '-' + ((#session.getAttribute('user').registerDate.getDate() < 10 ? '0' + #session.getAttribute('user').registerDate.getDate() : #session.getAttribute('user').registerDate.getDate())) + ' ' + (#session.getAttribute('user').registerDate.hours < 10 ? '0' + #session.getAttribute('user').registerDate.hours : #session.getAttribute('user').registerDate.hours) + ':' + (#session.getAttribute('user').registerDate.minutes < 10 ? '0' + #session.getAttribute('user').registerDate.minutes : #session.getAttribute('user').registerDate.minutes) + ':' + (#session.getAttribute('user').registerDate.seconds < 10 ? '0' + #session.getAttribute('user').registerDate.seconds : #session.getAttribute('user').registerDate.seconds)}"></th:block></td></tr>
+                            <tr><td>上次登录：</td><td class="my_read_only"><th:block th:text="${(#session.getAttribute('user').lastAccessTime.getYear() + 1900) + '-' + ((#session.getAttribute('user').lastAccessTime.getMonth() + 1) < 10 ? '0' + (#session.getAttribute('user').lastAccessTime.getMonth() + 1) : (#session.getAttribute('user').lastAccessTime.getMonth() + 1)) + '-' + ((#session.getAttribute('user').lastAccessTime.getDate()) < 10 ? '0' + (#session.getAttribute('user').lastAccessTime.getDate()) : (#session.getAttribute('user').lastAccessTime.getDate())) + ' ' + (#session.getAttribute('user').lastAccessTime.hours < 10 ? '0' + #session.getAttribute('user').lastAccessTime.hours : #session.getAttribute('user').lastAccessTime.hours) + ':' + (#session.getAttribute('user').lastAccessTime.minutes < 10 ? '0' + #session.getAttribute('user').lastAccessTime.minutes : #session.getAttribute('user').lastAccessTime.minutes) + ':' + (#session.getAttribute('user').lastAccessTime.seconds < 10 ? '0' + #session.getAttribute('user').lastAccessTime.seconds : #session.getAttribute('user').lastAccessTime.seconds)}"></th:block></td></tr>
+                        </table>
+                    </div>
+                </div>
 
                 <script th:src="@{/js/jquery.min.js}"></script>
                 <script th:src="@{/layui/layui.js}"></script>
@@ -38,5 +66,6 @@
                 <i></i>
             </a>
         </div>
+        <div id="displayImg"></div>
     </div>
 </header>

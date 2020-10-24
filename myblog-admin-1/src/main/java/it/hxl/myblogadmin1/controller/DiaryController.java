@@ -6,9 +6,12 @@ import it.hxl.myblogadmin1.service.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -20,8 +23,18 @@ public class DiaryController {
     private DiaryService diaryService;
 
 
+    @RequestMapping("/add")
+//    @ResponseBody
+    public String addDiary(Diary diary, MultipartFile display) throws IOException {
+        diary.setImage(display.getBytes());
+        diary.setIssueDate(new Date());
+        diaryService.insertDiary(diary);
+        return "redirect:/diary/1";
+    }
+
+
     @RequestMapping("/deleteAllChecked")
-    private String deleteAllChecked(int[] checkbox){
+    public String deleteAllChecked(int[] checkbox){
         String ids = Arrays.toString(checkbox);
         ids = ids.substring(1, ids.length()-1);
         diaryService.deleteMutiComments(ids);

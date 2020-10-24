@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface BlogMapper {
+
     /**
      * 获取非置顶的Blog
      * @return 返回Blog的list
@@ -30,6 +31,18 @@ public interface BlogMapper {
             @Result(column = "issueDate", property = "issueDate", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),
     })
     List<Blog> findNotTopBlogsByTagId(int tagId);
+
+    /**
+     * 根据pageId查询blog
+     * @param pageId
+     * @return
+     */
+    @Select("select top (${pageId}*${pageSize}) * from blog order by isTop desc, isOriginal desc")
+    @ResultMap("blogMapper")
+    List<Blog> findBlogByPageId(int pageId, int pageSize);
+
+    @Select("select count(*) from blog")
+    int getCountBlogs();
 
     /**
      * 获取非置顶的Blog
@@ -64,6 +77,10 @@ public interface BlogMapper {
     @Select("select * from blog where isTop=1 order by visitCount desc")
     @ResultMap("blogMapper")
     List<Blog> findTopBlogs();
+
+    @Select("select top 10 * from blog where isTop=1 order by visitCount desc")
+    @ResultMap("blogMapper")
+    List<Blog> findTop10Blogs();
 
     /**
      * 获取置顶的Blog并返回

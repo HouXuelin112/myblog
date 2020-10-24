@@ -1,16 +1,30 @@
 package it.hxl.myblogadmin1.mapper;
 
 import it.hxl.myblogadmin1.entity.Users;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import it.hxl.myblogadmin1.mapper.provider.UserProvider;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 public interface UserMapper {
+
+    @Select("select count(*) from users")
+    int getUserCount();
+
+    @UpdateProvider(type = UserProvider.class, method = "updateUser")
+    @Transactional
+    int updateUser(Users user);
+
+    @Delete("delete from users where id=#{id}")
+    @Transactional
+    int deleteUserById(@Param("id") int id);
+
+    @Select("select top ${pageSize} * from users where id>=(select max(id) from (select top (${pageSize}*${lastPage}+1) * from users order by id asc) temp)")
+    List<Users> findUserByPage(@Param("pageSize") int pageSize, @Param("lastPage") int lastPage);
 
     @Select("select * from users where id = #{id}")
     Users findUserById(int id);

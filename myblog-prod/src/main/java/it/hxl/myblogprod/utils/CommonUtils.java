@@ -1,26 +1,65 @@
 package it.hxl.myblogprod.utils;
 
+import it.hxl.myblogprod.entity.MyEmail;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
 
+    /**
+     * 获得客户端真实IP地址
+     * @param request 客户端请求
+     * @return
+     */
+    public static String getRealIp(HttpServletRequest request){
+        String ipAddress = request.getHeader("x-forwarded-for");
+        if(ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("Proxy-Client-IP");
+        }
+        if(ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if(ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
+            if(ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1")){
+                //根据网卡取本机配置的IP
+                InetAddress inet=null;
+                try {
+                    inet = InetAddress.getLocalHost();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                ipAddress= inet.getHostAddress();
+            }
+        }
+        //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+        if(ipAddress!=null && ipAddress.length()>15){ //"***.***.***.***".length() = 15
+            if(ipAddress.indexOf(",")>0){
+                ipAddress = ipAddress.substring(0,ipAddress.indexOf(","));
+            }
+        }
+        return ipAddress;
+    }
 
-    public static void sendValiStr(String to, String valiStr) throws EmailException {
+
+    public static void sendValiStr(MyEmail myEmail, String to, String valiStr) throws EmailException {
         SimpleEmail email = new SimpleEmail();
-        email.setHostName("smtp.163.com");
-        email.setAuthentication("17857330861@163.com","OCALXAJIGATNWLAO");
-        email.addTo(to, "hxlss");
-        email.setFrom("17857330861@163.com", "hxl");
-        email.setSubject("Hxl.blog注册验证码");
+        email.setHostName(myEmail.getHostname());
+        email.setAuthentication(myEmail.getUsername(),myEmail.getPassword());
+        email.addTo(to, "customer");
+        email.setFrom(myEmail.getUsername(), myEmail.getName());
+        email.setSubject("Hxl.blog注册验证码:" + valiStr);
         email.setMsg("尊敬的客户你好！你的验证码为： " + valiStr + " 。如非本人操作，请忽略！");
         email.send();
     }

@@ -30,6 +30,9 @@ public class AdminProvider {
                 if (admin.getHead() != null){
                     SET("head = #{head}");
                 }
+                if (admin.getSalt() != null){
+                    SET("salt = #{salt}");
+                }
                 WHERE("id = #{id}");
             }
         }.toString();

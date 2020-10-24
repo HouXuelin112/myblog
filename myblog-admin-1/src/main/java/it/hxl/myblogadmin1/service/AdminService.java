@@ -12,6 +12,8 @@ public interface AdminService {
      */
     Admin validateAdmin(Admin admin);
 
+    Admin getAdminByName(String adminName);
+
     int updateAdmin(Admin admin);
 
     Admin findAdminById(int id);

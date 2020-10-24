@@ -99,6 +99,9 @@
                       success: function (data) {
                         $("#displayImgPath").val(data);
                         $("#displayImgPath").removeClass("sr-only");
+                      },
+                      error: function () {
+                        alert("服务器出错了！");
                       }
                     })
                 });
@@ -121,7 +124,7 @@
             <div class="add-article-box">
               <h2 class="add-article-box-title"><span>标题图片</span></h2>
               <div class="add-article-box-content">
-                <input type="text" class="form-control" required placeholder="点击选择展示图片" id="displayImg" name="displayImg" autocomplete="off">
+                <input type="text" class="form-control" placeholder="点击选择展示图片" id="displayImg" name="displayImg" autocomplete="off">
                 <input type="file" class="form-control sr-only" id="displayImgFile" accept=".png,.jpg,.gif,.svg,.jpeg">
                 <input type="text" class="sr-only" id="displayBase64" name="displayBase64">
                 <img src="" style="width: 100%; margin: 5px auto" class="img-rounded hidden" id="display">

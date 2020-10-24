@@ -34,7 +34,7 @@
         <ol class="breadcrumb">
           <li><a th:href="@{~/add-diary}">增加</a></li>
         </ol>
-        <h1 class="page-header">管理 <span class="badge">3</span></h1>
+        <h1 class="page-header">管理 <span class="badge"></span></h1>
         <div class="table-responsive">
           <table class="table table-striped table-hover">
             <thead>
@@ -50,7 +50,7 @@
                 <td><input type="checkbox" class="input-control" name="checkbox" th:value="${diary.id}" /></td>
                 <td class="article-title" th:text="${diary.title}">这是日记标题</td>
                 <td th:text="${dateFormat.format(diary.issueDate)}">2015-12-03</td>
-                <td><a th:rel="${diary.id}" name="delete">删除</a></td>
+                <td><a th:rel="${diary.id}" name="delete" class="btn btn-danger btn-sm">删除</a></td>
               </tr>
             </tbody>
           </table>

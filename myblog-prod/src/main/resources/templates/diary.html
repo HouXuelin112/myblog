@@ -51,8 +51,8 @@
 							<div class="desc">
 								<h2 th:text="${diary.title}"></h2>
 								<p th:id="${'diaryContent' + diary.id}"></p>
-								<th:block th:if="${diary.image != null}">
-									<img style="opacity: 1;width: 600px" th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(diary.image)}"/>
+								<th:block th:if="${diary.image != null and diary.image.length!=0}">
+									<img style="opacity: 1;width: 40%" th:src="${'data:image/jpeg;base64,' + base64Encoder.encode(diary.image)}"/>
 								</th:block>
 								<script th:inline="javascript">
 

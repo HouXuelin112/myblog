@@ -47,4 +47,7 @@ public interface MessageMapper {
     @ResultMap("messageMap")
     List<Message> findAllChildMessageByParentId(int parentId);
 
+    @Select("select * from message where id=#{id}")
+    @ResultMap("messageMap")
+    Message getSingle(int id);
 }

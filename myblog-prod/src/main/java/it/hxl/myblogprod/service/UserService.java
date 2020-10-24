@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface UserService {
 
+    Users findUserById(int id);
+
+    void updateUser(Users user);
+
     /**
      * 验证用户名密码，返回user实体
      * @param user

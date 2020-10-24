@@ -9,4 +9,5 @@ public interface DiaryService {
     List<Diary> findCommentByPage(int pageSize, int lastPage);
     int deleteDiaryById(int id);
     int deleteMutiComments(String ids);
+    int insertDiary(Diary diary);
 }

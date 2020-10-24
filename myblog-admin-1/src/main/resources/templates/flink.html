@@ -29,12 +29,12 @@
   <div class="row">
     <th:block th:include="aside.html::ul(class='flink')"></th:block>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
-      <form action="/Flink/checkAll" method="post" >
+      <form th:action="@{~/link/deleteAllChecked}" method="post" >
         <h1 class="page-header">操作</h1>
         <ol class="breadcrumb">
           <li><a th:href="@{/add-flink}">增加友情链接</a></li>
         </ol>
-        <h1 class="page-header">管理 <span class="badge">1</span></h1>
+        <h1 class="page-header">管理 <span class="badge" th:text="${handleCounts}">1</span></h1>
         <div class="table-responsive">
           <table class="table table-striped table-hover">
             <thead>
@@ -43,14 +43,16 @@
                 <th><span class="glyphicon glyphicon-bookmark"></span> <span class="visible-lg">名称</span></th>
                 <th><span class="glyphicon glyphicon-link"></span> <span class="visible-lg">URL</span></th>
                 <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">操作</span></th>
+                <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">审核状态</span></th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox" class="input-control" name="checkbox[]" value="" /></td>
-                <td class="article-title">异清轩</td>
-                <td>http://www.ylsat.com</td>
-                <td><a href="update-flink.html">修改</a> <a rel="6">删除</a></td>
+            <tbody th:if="${links != null}">
+              <tr th:each="link: ${links}">
+                <td><input type="checkbox" class="input-control" name="checkbox" th:value="${link.id}" /></td>
+                <td class="article-title" th:text="${link.name}">Hxl.blog</td>
+                <td th:text="${link.addr}">http://www.ylsat.com</td>
+                <td><a th:rel="${link.id}" class="btn btn-primary btn-sm" name="see">查看/修改</a> <a th:rel="${link.id}" class="btn btn-danger btn-sm" name="delete">删除</a></td>
+                <td><a th:rel="${link.id}" name="check" th:class="${link.status == 1 ? '': 'btn btn-default btn-sm'}" th:text="${link.status == 1 ? '审核通过': '待审核(点击通过)'}"></a></td>
               </tr>
             </tbody>
           </table>
@@ -63,10 +65,10 @@
                 <button type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete">删除</button>
               </div>
             </div>
-            <ul class="pagination pagenav">
-              <li class="disabled"><a aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
-              <li class="active"><a>1</a></li>
-              <li class="disabled"><a aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+            <ul class="pagination pagenav" th:if="${pages != null}">
+              <li id="prePage" th:class="${(1 == current ? 'disabled': '')}"><a aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+              <li th:each="page:${pages}" th:class="${page == current ? 'active': ''}"><a  th:text="${page}" th:href="@{~/link/{p}(p=${page})}">1</a></li>
+              <li id="nextPage" th:class="${(pages.length > 1 ? '': 'disabled') + (pages.length == current ? ' disabled': '')}"><a aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
             </ul>
           </nav>
         </footer>
@@ -74,29 +76,188 @@
     </div>
   </div>
 </section>
+<!--查看留言模态框-->
+<div class="modal fade" id="seeComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <form th:action="@{/link/updateLink}" method="post">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" >查看</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table" style="margin-bottom:0px;">
+            <thead>
+            <tr> </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td wdith="20%">网站ID:</td>
+              <td width="80%">
+                <input type="text" class="form-control" readonly name="id" id="see-link-id" maxlength="10" autocomplete="off" />
+              </td>
+            </tr>
+            <tr>
+              <td wdith="20%">网站图标:</td>
+              <td width="80%" class="form-inline">
+                <input type="text" class="form-control" name="iconC" id="iconC" placeholder="点击更换图标" maxlength="18" autocomplete="off" />
+                <input type="file" id="icon_file" class="sr-only">
+                <input type="text" class="sr-only" id="iconBase64" name="icon">
+                <img id="iconImage" style="width: 100px; height: 100px; border-radius: 50%; margin-left: 20px">
+              </td>
+            </tr>
+            <tr>
+              <td wdith="20%">网站名称:</td>
+              <td width="80%"><input type="text" class="form-control" id="see-link-name" name="name" maxlength="10" autocomplete="off" /></td>
+            </tr>
+            <tr>
+              <td wdith="20%">网站地址:</td>
+              <td width="80%"><input type="url" id="see-link-addr" class="form-control" name="addr" maxlength="13" autocomplete="off" /></td>
+            </tr>
+            <tr>
+              <td wdith="20%">网站描述:</td>
+              <td width="80%"><input type="text" value="" id="see-link-description" class="form-control" name="description" maxlength="18" autocomplete="off" /></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr></tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary"><span data-toggle="tooltip" data-placement="bottom" title="点击提交">提交</span></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{/bootstrap/js/admin-scripts.js}"></script>
 <script>
 //是否确认删除
-$(function(){   
-	$("#main table tbody tr td a").click(function(){
+$(function(){
+
+  var checkA = $("a[name='check']");
+  $.each(checkA, function () {
+    if ($(this).text()==='待审核(点击通过)'){
+      $(this).css("color", "red");
+    }else {
+      $(this).css("color", "green");
+    }
+  });
+
+  var allCheckbox = $("input[name='checkbox']");
+
+  var deleteAllChecked = $("button[name='checkbox_delete']");
+
+  $("#iconC").click(function () {
+    $("#icon_file").click();
+  });
+  $("#icon_file").on("change", function (e) {
+    var file = e.target.files[0];
+    $("#iconC").val(file.name);
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (ev) {
+      var result = ev.target.result;
+      $("#iconImage").attr("src", result);
+      $("#iconBase64").val(result);
+    }
+  });
+
+  allCheckbox.on("change", function () {
+    deleteAllChecked.addClass("disabled");
+    deleteAllChecked.attr("disabled", true);
+    allCheckbox.each(function () {
+      if($(this).is(":checked")){
+        deleteAllChecked.removeClass("disabled");
+        deleteAllChecked.removeAttr("disabled");
+      }
+    })
+  })
+
+  $("#prePage").click(function () {
+    var current = $(this).siblings(".active").children("a").text();
+    if ($(this).hasClass("disabled")){
+      current = parseInt($(this).siblings("li").last().prev().children("a").text()) + 1;
+    }
+    window.location.href = "/link/" + --current;
+  });
+  $("#nextPage").click(function () {
+    var current = $(this).siblings(".active").children("a").text();
+    if ($(this).hasClass("disabled")){
+      current = 0;
+    }
+    window.location.href = "/link/" + ++current;
+  });
+  function getMyDateTime(str){
+    var oDate = new Date(str),
+            oYear = oDate.getFullYear(),
+            oMonth = oDate.getMonth()+1< 10 ? "0" + (oDate.getMonth()+1) : (oDate.getMonth()+1);
+    oDay = oDate.getDate()< 10 ? "0" + oDate.getDate() : oDate.getDate();
+    oHour = oDate.getHours() < 10 ? "0" + oDate.getHours() : oDate.getHours();
+    oMinute = oDate.getMinutes() < 10 ? "0" + oDate.getMinutes() : oDate.getMinutes();
+    oSecond = oDate.getSeconds() < 10 ? "0" + oDate.getSeconds() : oDate.getSeconds();
+
+    oTime = oYear +'-'+ oMonth +'-'+ oDay +" "+ oHour + ":" + oMinute + ":" +oSecond;//最后拼接时间
+    return oTime;
+  };
+
+  $("#main table tbody tr td a").click(function(){
 		var name = $(this);
 		var id = name.attr("rel"); //对应id  
-		if (event.srcElement.outerText == "删除") 
-		{
-			if(window.confirm("此操作不可逆，是否确认？"))
-			{
-				$.ajax({
-					type: "POST",
-					url: "/Flink/delete",
-					data: "id=" + id,
-					cache: false, //不缓存此页面   
-					success: function (data) {
-						window.location.reload();
-					}
-				});
-			};
-		};
+      if (name.attr("name") === "delete")
+      {
+        if(window.confirm("此操作不可逆，是否确认？"))
+        {
+          $.ajax({
+            type: "POST",
+            url: "/link/delete",
+            data: {
+              id: id
+            },
+            cache: false, //不缓存此页面
+            success: function (data) {
+              window.location.reload();
+            }
+          });
+        }
+      }else if (name.attr("name") === "see") {
+        $.ajax({
+          type: "POST",
+          url: "/link/see",
+          data: {
+            id: id
+          },
+          cache: false, //不缓存此页面
+          success: function (data) {
+            // var data = JSON.parse(data);
+            $('#see-link-id').val(data.id);
+            $('#iconImage').attr("src", data.icon);
+            $('#see-link-name').val(data.name);
+            $('#see-link-addr').val(data.addr);
+            $('#see-link-description').val(data.description);
+            $('#seeComment').modal('show');
+          }
+        });
+      }else if (name.attr("name") === 'check'){
+          if (name.text() === '待审核(点击通过)') {
+            if (confirm("点击确定后该链接将显示给到博客网站中")) {
+              $.ajax({
+                type: "POST",
+                url: "/link/updateStatus",
+                data: {
+                  id: id
+                },
+                cache: false, //不缓存此页面
+                success: function (data) {
+                  window.location.reload();
+                }
+              });
+            }
+          }
+      }
 	});   
 });
 </script>

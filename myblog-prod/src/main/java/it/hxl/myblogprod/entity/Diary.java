@@ -9,6 +9,16 @@ public class Diary {
     private String title;
     private byte[] image;
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    private String color;
+
     @Override
     public String toString() {
         return "Diary{" +
@@ -59,11 +69,12 @@ public class Diary {
         this.title = title;
     }
 
-    public Diary(int id, String diaryContent, String title, byte[] image, Date issueDate) {
+    public Diary(int id, String diaryContent, String title, byte[] image, String color, Date issueDate) {
         this.id = id;
         this.diaryContent = diaryContent;
         this.title = title;
         this.image = image;
+        this.color = color;
         this.issueDate = issueDate;
     }
 

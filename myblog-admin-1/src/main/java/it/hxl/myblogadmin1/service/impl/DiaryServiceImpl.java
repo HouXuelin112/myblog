@@ -33,4 +33,9 @@ public class DiaryServiceImpl implements DiaryService {
     public int deleteMutiComments(String ids) {
         return diaryMapper.deleteMutiComments(ids);
     }
+
+    @Override
+    public int insertDiary(Diary diary) {
+        return diaryMapper.insertDiary(diary);
+    }
 }

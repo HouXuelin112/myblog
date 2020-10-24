@@ -80,6 +80,19 @@
     var $delete = $("#btn_delete");
 
 
+    $(function () {
+        $(".my-click").click(function () {
+            alert("c")
+        });
+        $(".my-click").popover({
+           placeholder: "right",
+           trigger: "hover",
+           container: "body",
+           html: true,
+           content: "<img src='data:image/png;base64," + $(this).attr("src") +"' style='width:300;height:300px'/>"
+        });
+    });
+
 
     $delete.click(function () {
         if (!window.confirm("此操作不可逆，谨慎执行")){
@@ -163,8 +176,11 @@
     },{
         field: "displayBase64",
         title: "展示图",
+        hover: function(){
+            console.log("ll");
+        },
         formatter: function (value, row, index) {
-            return '<img style="width: 50px; height: 50px" src="data:image/jpg;base64,' + value +'">';
+            return '<img class="my-click" style="width: 50px; height: 50px" src="data:image/jpg;base64,' + value +'">';
         }
     },{
         field: "issueDate",
@@ -173,6 +189,11 @@
             return getMyDateTime(value);
         }
     }];
+
+    $(".img-click").click(function () {
+        var src = $(this).attr(src);
+
+    });
 
     $("#myData").bootstrapTable({
         url: "/blog/getBlogs",
@@ -199,6 +220,7 @@
         // detailFormatter: detailFormatter,
         columns: columns,
     });
+
 
 
     $add.click(function () {

@@ -189,7 +189,7 @@
 					<h5 class="other-item-title">置顶推荐</h5>
 					<div class="inner">
 						<ul class="hot-list-article">
-							<th:block  th:each="topBlog : ${topBlogs}">
+							<th:block  th:each="topBlog : ${top10Blogs}">
 								<li> <a th:href="@{/read/{id}(id=${topBlog.id})}" th:text="${topBlog.title}">.NET Spire.Doc组件</a></li>
 							</th:block>
 						</ul>

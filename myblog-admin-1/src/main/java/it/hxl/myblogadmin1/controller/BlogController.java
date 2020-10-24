@@ -1,8 +1,11 @@
 package it.hxl.myblogadmin1.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import it.hxl.myblogadmin1.entity.Admin;
 import it.hxl.myblogadmin1.entity.Blog;
+import it.hxl.myblogadmin1.interceptor.AddArticleInterceptor;
 import it.hxl.myblogadmin1.service.BlogService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
@@ -31,6 +34,7 @@ public class BlogController {
 
 
     @RequestMapping("/add")
+//    @RequiresPermissions("admin")
 //    @ResponseBody
     public String addBlog(Blog blog, String displayBase64) throws IOException {
         BASE64Decoder base64Decoder = new BASE64Decoder();

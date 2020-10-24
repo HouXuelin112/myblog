@@ -21,6 +21,9 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     public int insertLink(Link link) {
+        if (linkMapper.findLinkByName(link.getAddr()) != null){
+            throw new RuntimeException("该链接已存在或正在审核，如有任何问题，请与管理员联系");
+        }
         return linkMapper.insertLink(link);
     }
 }

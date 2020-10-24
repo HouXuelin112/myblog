@@ -10,12 +10,19 @@ import java.util.List;
 
 @Repository
 public interface CommentsMapper {
+
+    @Select("select * from Comments where id = #{id}")
+    @ResultMap("commentMapper")
+    Comments findCommentById(int id);
     /**
      * 插入评论
      * @param comments
      * @return
      */
     @InsertProvider(type = CommentProvider.class, method = "insertComment")
+//    @Insert("insert into Comments(user_id, blog_id, comment_content, parent_id, issueDate, toUser) values(#{user.id},#{blog.id}, #{commentContent}, #{parentId}, #{issueDate}, #{toUser.id})")
+//    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    @SelectKey(statement="select max(id) from Comments",before=false,keyProperty="id",resultType=Integer.class,keyColumn="id")
     @Transactional
     int insertComments(Comments comments);
 
@@ -41,7 +48,7 @@ public interface CommentsMapper {
      * @param blogId
      * @return
      */
-    @Select("select * from Comments where blog_id= #{blogId} and parent_id= #{parentId}")
+    @Select("select * from Comments where blog_id= #{blogId} and parent_id= #{parentId} order by issueDate desc")
     @ResultMap("commentMapper")
     List<Comments> findCommentsByParentIdAndBlogId(int parentId, int blogId);
 

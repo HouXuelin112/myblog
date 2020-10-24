@@ -32,6 +32,12 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
+    @ResponseBody
+    @RequestMapping("/user/wxLogin")
+    public void wxLogin (String code, String state) {
+        System.out.println(code + ":" + state);
+    }
+
     @RequestMapping("/getJson")
     @ResponseBody
     public Object getJson(HttpServletResponse response){

@@ -1,18 +1,38 @@
 package it.hxl.myblogprod.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Comments {
+public class Comments implements Serializable {
     private int id;
     private Users user;
     private Blog blog;
+
+    public String getMessageContent() {
+        return messageContent;
+    }
+
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
+    }
+
+    public List<Comments> getChildMessages() {
+        return childMessages;
+    }
+
+    public void setChildMessages(List<Comments> childMessages) {
+        this.childMessages = childMessages;
+    }
+
     private String commentContent;
+    private String messageContent;
     private int parentId;
     private Date issueDate;
     private String childHtml;
     private Users toUser;
     private List<Comments> childComments;
+    private List<Comments> childMessages;
 
     public List<Comments> getChildComments() {
         return childComments;
@@ -20,6 +40,7 @@ public class Comments {
 
     public void setChildComments(List<Comments> childComments) {
         this.childComments = childComments;
+        this.setChildMessages(childComments);
     }
 
     @Override
@@ -85,6 +106,7 @@ public class Comments {
 
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
+        this.setMessageContent(commentContent);
     }
 
     public int getParentId() {

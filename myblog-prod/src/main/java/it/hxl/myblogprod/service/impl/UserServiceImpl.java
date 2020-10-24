@@ -16,9 +16,20 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
+    public Users findUserById(int id) {
+        return userMapper.findUserById(id);
+    }
+
+    @Override
+    public void updateUser(Users user) {
+        userMapper.updateUser(user);
+    }
+
+    @Override
     public Users validate(Users user) {
 //        System.out.println(userMapper.findRecentVisitor().size());
         Users newUser = userMapper.findUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+        newUser = newUser == null ? userMapper.findUserByEmailAndPassword(user.getUsername(), user.getPassword()) : newUser;
         if (newUser != null){//更新用户的lastAccessTime
             userMapper.updateLastAccessTime(newUser.getId());
         }
@@ -32,8 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void insertUser(Users user) {
-        if (userMapper.findUserByUsername(user.getUsername()) != null){
-            throw new RuntimeException("用户名已存在！");
+        if (userMapper.findUserByEmail(user.getEmail()) != null){
+            throw new RuntimeException("该邮箱已注册！");
         }
         userMapper.insertUser(user);
     }

@@ -106,16 +106,19 @@
                 var new_password = $("input[name='new_password']").val();
                 if (password === '' || password === null){
                     $("#submit").removeAttr("disabled");
+                    $("#submit").removeClass("disabled");
                     $("#tip").attr("title", "点击提交");
                     return;
                 }
                 if (old_password === '' || old_password === null){
                     $("#submit").attr("disabled", "true");
+                    $("#submit").addClass("disabled");
                     $("#tip").attr("title", "旧密码不能为空");
                     return;
                 }
                 if (password !== new_password){
                     $("#submit").attr("disabled", "true");
+                    $("#submit").addClass("disabled");
                     $("#tip").attr("title", "新密码两次输入不同");
                     return;
                 }
@@ -135,10 +138,12 @@
                 })
                 if (tag !== 1){
                     $("#submit").attr("disabled", "true");
+                    $("#submit").addClass("disabled");
                     $("#tip").attr("title", "旧密码输入出错");
                     return;
                 }
                 $("#submit").removeAttr("disabled")
+                $("#submit").removeClass("disabled")
                 $("#tip").attr("title", "点击提交");
             });
             $("#headC").click(function () {

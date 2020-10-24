@@ -42,8 +42,8 @@ public class IndexInterceptor implements HandlerInterceptor {
         if (admin != null) {
             request.setAttribute("loginCount", adminLoginService.getLoginCountByAdminId(admin.getId()));
             List<AdminLogin> adminLogins = (List<AdminLogin>) request.getSession().getAttribute("adminlogins");
-            request.setAttribute("lastAccessTime", adminLogins.size() > 0 ?adminLogins.get(1).getLastAccessTime():adminLogins.get(0).getLastAccessTime());
-            request.setAttribute("loginIp", adminLogins.size() > 0 ?adminLogins.get(1).getLoginIp():adminLogins.get(0).getLoginIp());
+            request.setAttribute("lastAccessTime", adminLogins.size() > 1 ?adminLogins.get(1).getLastAccessTime():adminLogins.get(0).getLastAccessTime());
+            request.setAttribute("loginIp", adminLogins.size() > 1 ?adminLogins.get(1).getLoginIp():adminLogins.get(0).getLoginIp());
         }
     }
 }

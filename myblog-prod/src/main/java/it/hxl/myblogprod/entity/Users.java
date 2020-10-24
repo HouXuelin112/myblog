@@ -1,5 +1,8 @@
 package it.hxl.myblogprod.entity;
 
+import sun.misc.BASE64Decoder;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -14,6 +17,14 @@ public class Users {
     private byte[] head;
     private Date registerDate;
     private Date lastAccessTime;
+    private Date birthday;
+    private int age;
+
+    public void setHeadBase64(String base64) throws IOException {
+        if (!"".equals(base64)) {
+            this.head = new BASE64Decoder().decodeBuffer(base64);
+        }
+    }
 
     @Override
     public String toString() {
@@ -27,7 +38,40 @@ public class Users {
                 ", head=" + Arrays.toString(head) +
                 ", registerDate=" + registerDate +
                 ", lastAccessTime=" + lastAccessTime +
+                ", birthday=" + birthday +
+                ", age=" + age +
                 '}';
+    }
+
+    public Date getBirthday() {
+
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Users(int id, String username, String password, String phone, String email, String nickName, byte[] head, Date registerDate, Date lastAccessTime, Date birthday, int age) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
+        this.email = email;
+        this.nickName = nickName;
+        this.head = head;
+        this.registerDate = registerDate;
+        this.lastAccessTime = lastAccessTime;
+        this.birthday = birthday;
+        this.age = age;
     }
 
     public String getPhone() {

@@ -1,21 +1,21 @@
 package it.hxl.myblogprod.controller;
 
+import it.hxl.myblogprod.entity.MyEmail;
 import it.hxl.myblogprod.entity.Users;
 import it.hxl.myblogprod.service.UserService;
 import it.hxl.myblogprod.utils.CommonUtils;
-import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.stream.MemoryCacheImageInputStream;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 @Controller
@@ -23,6 +23,8 @@ public class LoginAndRegisterController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private MyEmail myEmail;
 
     @RequestMapping("/checkValiStr")
     @ResponseBody
@@ -34,26 +36,35 @@ public class LoginAndRegisterController {
         if (!valiStr.equals(iniValiStr)){
             return "error";
         }
+        session.removeAttribute("valiStr");
         return "ok";
     }
 
     @RequestMapping("/getValiStr")
     @ResponseBody
-    public String getValiStr(String email, HttpSession session) throws EmailException {
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < 6; i++){
-             sb.append(random.nextInt(10));
+    public String getValiStr(@RequestParam("email") String email, HttpSession session)  {
+        try{
+            System.out.println(email);
+            Random random = new Random();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 6; i++){
+                 sb.append(random.nextInt(10));
+            }
+            CommonUtils.sendValiStr(myEmail, email, sb.toString());
+            session.setAttribute("valiStr", sb.toString());
+            return "valiStr send successfully";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "error";
         }
-        CommonUtils.sendValiStr(email, sb.toString());
-        session.setAttribute("valiStr", sb.toString());
-        return "valiStr send successfully";
     }
 
-
-    @RequestMapping("/register")
-//    @ResponseBody
-    public String register(Users user, Model model, MultipartFile file) throws IOException {
+    /**
+     * 验证用户信息
+     * 为用户设置登录名
+     * @param user
+     */
+    private Users addUser(Users user, MultipartFile file) throws IOException {
         if (file != null) {
             user.setHead(file.getBytes());
         }else{
@@ -65,6 +76,18 @@ public class LoginAndRegisterController {
             imageInputStream.read(bytes);
             user.setHead(bytes);
         }
+        String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        int dotIndex = user.getEmail().indexOf("@");
+        user.setUsername(date + user.getEmail().substring(dotIndex - 4, dotIndex));
+        user.setNickName("nickname1");
+        return user;
+    }
+
+
+    @RequestMapping("/register")
+//    @ResponseBody
+    public String register(Users user, Model model, MultipartFile file) throws IOException {
+        user = addUser(user, file);
         try{
             userService.insertUser(user);
         }catch (Exception e){
@@ -77,11 +100,17 @@ public class LoginAndRegisterController {
         return "login";
     }
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
+    public String toPage(){
+        return "login";
+    }
+
+    @PostMapping("/login")
     public String login(Users user, Model model, HttpSession session){
+        model.addAttribute("username", user.getUsername());
         Users newUser = userService.validate(user);
         if (newUser == null){
-            model.addAttribute("loginError", "用户名或密码错误");
+            model.addAttribute("loginError", "邮箱/用户名或密码错误");
             return "login";
         }
         session.setAttribute("user", newUser);

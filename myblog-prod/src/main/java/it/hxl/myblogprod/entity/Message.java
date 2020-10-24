@@ -1,12 +1,13 @@
 package it.hxl.myblogprod.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * 留言类
  */
-public class Message {
+public class Message implements Serializable {
     private int id;
     private Users user;
     private String messageContent;

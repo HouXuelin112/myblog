@@ -11,13 +11,14 @@ import java.util.List;
 @Repository
 public interface DiaryMapper {
 
-    @Select("select * from diary")
+    @Select("select * from diary order by issueDate desc")
     @Results({
             @Result(id = true, column = "id", property = "id"),
             @Result(column = "diary_content", property = "diaryContent"),
             @Result(column = "issueDate", property = "issueDate"),
             @Result(column = "image", property = "image"),
-            @Result(column = "title", property = "title")
+            @Result(column = "title", property = "title"),
+            @Result(column = "color", property = "color")
     })
     List<Diary> findAllDiary();
 

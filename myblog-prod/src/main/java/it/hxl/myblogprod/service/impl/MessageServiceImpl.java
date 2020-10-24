@@ -15,6 +15,28 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageMapper messageMapper;
 
+
+    @Override
+    public Message getSingle(int id) {
+        return messageMapper.getSingle(id);
+    }
+
+    @Override
+    public List<Message> findTreeMessage() {
+        List<Message> messages = messageMapper.findAllParentMessages();
+        this.getChildren(messages);
+        return messages;
+    }
+
+    private void getChildren(List<Message> parentMessages){
+        if (parentMessages != null && parentMessages.size() > 0) {
+            for (int i = 0; i < parentMessages.size(); i ++) {
+                parentMessages.get(i).setChildMessages(messageMapper.findAllChildMessageByParentId(parentMessages.get(i).getId()));
+                getChildren(parentMessages.get(i).getChildMessages());
+            }
+        }
+    }
+
     @Override
     public int insertMessage(Message message) {
         message.setIssueDate(new Date());

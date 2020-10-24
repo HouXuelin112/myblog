@@ -6,6 +6,18 @@ import java.util.List;
 
 public interface BlogService {
     /**
+     * 根据pageId查找
+     * @param pageId
+     * @return
+     */
+    List<Blog> findBlogByPageId(int pageId, int pageSize);
+
+    /**
+     * 获取博客总条数
+     * @return
+     */
+    int getCountBlogs();
+    /**
      * 获取置顶的Blog并返回
      * @return Blog的list
      */
@@ -41,6 +53,12 @@ public interface BlogService {
      * @return Blog的list
      */
     List<Blog> findTopBlogs();
+
+    /**
+     * 查询置顶前十
+     * @return
+     */
+    List<Blog> findTop10Blogs();
 
     /**
      * 根据标题模糊查询

@@ -5,6 +5,11 @@ import it.hxl.myblogprod.entity.Comments;
 import java.util.List;
 
 public interface CommentsService {
+
+    Comments getSingle(int id);
+
+    List<Comments> findTreeCommentsByBlogId(int blogId);
+
     /**
      * 插入评论
      * @param comments

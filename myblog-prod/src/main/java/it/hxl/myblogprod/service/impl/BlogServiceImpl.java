@@ -15,6 +15,17 @@ public class BlogServiceImpl implements BlogService {
     private BlogMapper blogMapper;
 
     @Override
+    public List<Blog> findBlogByPageId(int pageId, int pageSize) {
+        List<Blog> blogs = blogMapper.findBlogByPageId(pageId, pageSize);
+        return blogs != null ? blogs.subList((pageId - 1) * pageSize, blogs.size()) : null;
+    }
+
+    @Override
+    public int getCountBlogs() {
+        return blogMapper.getCountBlogs();
+    }
+
+    @Override
     public List<Blog> findTopBlogsByTagId(int tagId) {
         return blogMapper.findTopBlogsByTagId(tagId);
     }
@@ -42,6 +53,11 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public List<Blog> findTopBlogs() {
         return blogMapper.findTopBlogs();
+    }
+
+    @Override
+    public List<Blog> findTop10Blogs() {
+        return blogMapper.findTop10Blogs();
     }
 
     @Override

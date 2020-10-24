@@ -1,7 +1,7 @@
 package it.hxl.myblogadmin1.mapper;
 
-import it.hxl.myblogadmin1.entity.Comments;
 import it.hxl.myblogadmin1.entity.Diary;
+import it.hxl.myblogadmin1.mapper.provider.DiaryProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +11,12 @@ import java.util.List;
 @Repository
 public interface DiaryMapper {
 
+    @InsertProvider(type = DiaryProvider.class, method = "insertDiary")
+    @Transactional
+    int insertDiary(Diary diary);
+
     @Delete("delete from diary where id in (${ids})")
+    @Transactional
     int deleteMutiComments(@Param("ids") String ids);
 
     @Select("select count(*) from diary")

@@ -31,41 +31,53 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
     <h1 class="page-header">操作</h1>
         <ol class="breadcrumb">
-          <li><a data-toggle="modal" data-target="#addUser">增加用户</a></li>
+          <li><a data-toggle="modal" data-target="#addUser" class="hidden">增加用户</a></li>
         </ol>
-        <h1 class="page-header">管理 <span class="badge">2</span></h1>
+        <h1 class="page-header">管理</h1>
         <div class="table-responsive">
-          <table class="table table-striped table-hover">
+          <table class="table table-striped table-hover table-bordered">
             <thead>
               <tr>
                 <th><span class="glyphicon glyphicon-th-large"></span> <span class="visible-lg">ID</span></th>
                 <th><span class="glyphicon glyphicon-user"></span> <span class="visible-lg">用户名</span></th>
-                <th><span class="glyphicon glyphicon-bookmark"></span> <span class="visible-lg">姓名</span></th>
-                <th><span class="glyphicon glyphicon-pushpin"></span> <span class="visible-lg">文章</span></th>
+                <th><span class="glyphicon glyphicon-bookmark"></span> <span class="visible-lg">昵称</span></th>
+                <th><span class="glyphicon glyphicon-pushpin"></span> <span class="visible-lg">邮箱</span></th>
                 <th><span class="glyphicon glyphicon-time"></span> <span class="visible-lg">上次登录时间</span></th>
                 <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">操作</span></th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>edit</td>
-                <td>编辑</td>
-                <td>4</td>
-                <td>2015-12-03 15:14:27</td>
-                <td><a rel="1" name="see">修改</a> <a rel="1" name="delete">删除</a> <a href="/User/checked/id/1/action/n">禁用</a></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>test</td>
-                <td>测试</td>
-                <td>3</td>
-                <td>2015-12-03 15:14:27</td>
-                <td><a rel="2" name="see">修改</a> <a rel="2" name="delete">删除</a> <a href="/User/checked/id/2/action/y">启用</a></td>
+            <tbody th:if="${users != null}">
+              <tr th:each="user : ${users}">
+                <input th:id="${'imgSrc' + user.id}" class="sr-only" th:if="${user.head != null}" th:value="${'data:image/png;base64,' + base64Encoder.encode(user.head)}">
+                <td th:text="${user.id}">Id</td>
+                <td th:text="${user.username}">用户名</td>
+                <td th:text="${user.nickName}">昵称</td>
+                <td th:text="${user.email}">邮箱</td>
+                <td th:text="${dateFormat.format(user.lastAccessTime)}">2015-12-03 15:14:27</td>
+                <td>
+                  <a th:rel="${user.id}" name="see" class="btn btn-primary btn-sm">查看</a>
+                  <a th:rel="${user.id}" name="delete" class="btn btn-danger btn-sm">删除</a>
+                  <a th:rel="${user.id}" th:class="${user.status==0 ? 'btn btn-success btn-sm' : 'btn btn-warning btn-sm'}" th:name="${user.status==0 ? 'enable' : 'disable'}" th:style="${user.status==0 ? 'color:green' : 'color:red'}" th:text="${user.status==0 ? '启用' : '禁用'}"></a>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
+      <footer class="message_footer">
+        <nav>
+          <div class="btn-toolbar operation hidden" role="toolbar">
+            <div class="btn-group" role="group"> <a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a> </div>
+            <div class="btn-group" role="group">
+              <button type="submit" disabled class="btn disabled btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete">删除</button>
+            </div>
+          </div>
+          <ul class="pagination pagenav" th:if="${pages != null}">
+            <li id="prePage" th:class="${(1 == current ? 'disabled': '')}"><a aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+            <li th:each="page:${pages}" th:class="${page == current ? 'active': ''}"><a  th:text="${page}" th:href="@{~/user/list/{p}(p=${page})}">1</a></li>
+            <li id="nextPage" th:class="${(pages.length > 1 ? '': 'disabled') + (pages.length == current ? ' disabled': '')}"><a aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+          </ul>
+        </nav>
+      </footer>
     </div>
   </div>
 </section>
@@ -121,11 +133,11 @@
 <!--用户信息模态框-->
 <div class="modal fade" id="seeUser" tabindex="-1" role="dialog" aria-labelledby="seeUserModalLabel">
   <div class="modal-dialog" role="document" style="max-width:450px;">
-    <form action="/User/update" method="post" autocomplete="off" draggable="false">
+    <form th:action="@{~/user/updateUser}" method="post" enctype="multipart/form-data" autocomplete="off" draggable="false">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">修改用户</h4>
+          <h4 class="modal-title">查看用户</h4>
         </div>
         <div class="modal-body">
           <table class="table" style="margin-bottom:0px;">
@@ -133,30 +145,38 @@
               <tr> </tr>
             </thead>
             <tbody>
+            <tr>
+              <td wdith="20%">用户ID:</td>
+              <td width="80%"><input type="text" value="" class="form-control" id="userId" readonly name="id"  autocomplete="off" /></td>
+            </tr>
               <tr>
-                <td wdith="20%">姓名:</td>
-                <td width="80%"><input type="text" value="" class="form-control" id="truename" name="truename" maxlength="10" autocomplete="off" /></td>
+                <td wdith="20%">昵称:</td>
+                <td width="80%"><input type="text" value="" class="form-control" id="nickName" name="nickName"  autocomplete="off" /></td>
               </tr>
               <tr>
                 <td wdith="20%">用户名:</td>
-                <td width="80%"><input type="text" value="" class="form-control" id="username" name="username" maxlength="10" autocomplete="off" /></td>
+                <td width="80%"><input type="text" value="" class="form-control" id="username" name="username"  autocomplete="off" /></td>
               </tr>
               <tr>
                 <td wdith="20%">电话:</td>
-                <td width="80%"><input type="text" value="" class="form-control" id="usertel" name="usertel" maxlength="13" autocomplete="off" /></td>
+                <td width="80%"><input type="text" value="" class="form-control" id="phone" name="phone" maxlength="13" autocomplete="off" /></td>
               </tr>
               <tr>
-                <td wdith="20%">旧密码:</td>
-                <td width="80%"><input type="password" class="form-control" name="old_password" maxlength="18" autocomplete="off" /></td>
+                <td wdith="20%">密码:</td>
+                <td width="80%"><input type="text" class="form-control" id="password" name="password" autocomplete="off" /></td>
               </tr>
               <tr>
-                <td wdith="20%">新密码:</td>
-                <td width="80%"><input type="password" class="form-control" name="password" maxlength="18" autocomplete="off" /></td>
+                <td wdith="20%">邮箱:</td>
+                <td width="80%"><input type="email" class="form-control" id="email" name="email" autocomplete="off" /></td>
               </tr>
-              <tr>
-                <td wdith="20%">确认密码:</td>
-                <td width="80%"><input type="password" class="form-control" name="new_password" maxlength="18" autocomplete="off" /></td>
-              </tr>
+            <tr>
+              <td wdith="20%">头像:</td>
+              <td width="80%" class="form-inline">
+                <input type="text" class="form-control" name="imgC" id="imgC" placeholder="点击更换图标"  autocomplete="off" />
+                <input type="file" id="img_file" class="sr-only" name="imgFile">
+                <img id="hdImage" class="img-rounded" style="width: 100px; height: 100px; margin-left: 20px">
+              </td>
+            </tr>
             </tbody>
             <tfoot>
               <tr></tr>
@@ -166,7 +186,7 @@
         <div class="modal-footer">
           <input type="hidden" name="userid" value="" />
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="submit" class="btn btn-primary">提交</button>
+<!--          <button type="submit" class="btn btn-primary">提交</button>-->
         </div>
       </div>
     </form>
@@ -176,21 +196,84 @@
 <script th:src="@{/bootstrap/js/admin-scripts.js}"></script>
 <script>
 $(function () {
+
+
+  $("#imgC").click(function () {
+    $("#img_file").click();
+  });
+  $("#img_file").on("change", function (e) {
+    var file = e.target.files[0];
+    $("#imgC").val(file.name);
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (ev) {
+      var result = ev.target.result;
+      $("#hdImage").attr("src", result);
+    }
+  });
+
+  var allCheckbox = $("input[name='checkbox']");
+
+  var deleteAllChecked = $("button[name='checkbox_delete']");
+
+  allCheckbox.on("change", function () {
+    deleteAllChecked.addClass("disabled");
+    deleteAllChecked.attr("disabled", true);
+    allCheckbox.each(function () {
+      if($(this).is(":checked")){
+        deleteAllChecked.removeClass("disabled");
+        deleteAllChecked.removeAttr("disabled");
+      }
+    })
+  })
+
+  $("#prePage").click(function () {
+    var current = $(this).siblings(".active").children("a").text();
+    if ($(this).hasClass("disabled")){
+      current = parseInt($(this).siblings("li").last().prev().children("a").text()) + 1;
+    }
+    window.location.href = "/user/list/" + --current;
+  });
+  $("#nextPage").click(function () {
+    var current = $(this).siblings(".active").children("a").text();
+    if ($(this).hasClass("disabled")){
+      current = 0;
+    }
+    window.location.href = "/user/list/" + ++current;
+  });
+  function getMyDateTime(str){
+    var oDate = new Date(str),
+            oYear = oDate.getFullYear(),
+            oMonth = oDate.getMonth()+1< 10 ? "0" + (oDate.getMonth()+1) : (oDate.getMonth()+1);
+    oDay = oDate.getDate()< 10 ? "0" + oDate.getDate() : oDate.getDate();
+    oHour = oDate.getHours() < 10 ? "0" + oDate.getHours() : oDate.getHours();
+    oMinute = oDate.getMinutes() < 10 ? "0" + oDate.getMinutes() : oDate.getMinutes();
+    oSecond = oDate.getSeconds() < 10 ? "0" + oDate.getSeconds() : oDate.getSeconds();
+
+    oTime = oYear +'-'+ oMonth +'-'+ oDay +" "+ oHour + ":" + oMinute + ":" +oSecond;//最后拼接时间
+    return oTime;
+  };
+
     $("#main table tbody tr td a").click(function () {
         var name = $(this);
         var id = name.attr("rel"); //对应id   
         if (name.attr("name") === "see") {
             $.ajax({
                 type: "POST",
-                url: "/User/see",
-                data: "id=" + id,
+                url: "/user/see",
+                data: {
+                  id: id
+                },
                 cache: false, //不缓存此页面   
                 success: function (data) {
-                    var data = JSON.parse(data);
-					$('#truename').val(data.truename);
+                    // var data = JSON.parse(data);
+					$('#userId').val(data.id);
 					$('#username').val(data.username);
-					$('#usertel').val(data.usertel);
-					$('#userid').val(data.userid);
+					$('#password').val(data.password);
+					$('#phone').val(data.phone);
+					$('#email').val(data.email);
+					$('#nickName').val(data.nickName);
+					$('#hdImage').attr("src", $("#imgSrc" + data.id).val());
                     $('#seeUser').modal('show');
                 }
             });
@@ -198,11 +281,17 @@ $(function () {
             if (window.confirm("此操作不可逆，是否确认？")) {
                 $.ajax({
                     type: "POST",
-                    url: "/User/delete",
-                    data: "id=" + id,
+                    url: "/user/delete",
+                    data: {
+                      id: id
+                    },
                     cache: false, //不缓存此页面   
                     success: function (data) {
-                        window.location.reload();
+                        if (data === "ok"){
+                          window.location.reload();
+                        }else {
+                          alert(data);
+                        }
                     }
                 });
             };

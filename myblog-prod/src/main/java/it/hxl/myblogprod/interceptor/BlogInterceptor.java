@@ -26,6 +26,7 @@ public class BlogInterceptor implements HandlerInterceptor {
         System.out.println("进入blog拦截器");
         request.setAttribute("notTopBlogs", blogService.findNotTopBlogs());
         request.setAttribute("topBlogs", blogService.findTopBlogs());
+        request.setAttribute("top10Blogs", blogService.findTop10Blogs());
         request.setAttribute("hotTop10Blogs", blogService.findHotTopBlogs(10));
         request.setAttribute("recentVisitors", userService.findRecentVisitors());
         request.setAttribute("tags", tagService.findAllTags());

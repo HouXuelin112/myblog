@@ -50,7 +50,9 @@
                 <td class="" th:text="${comment.user.nickName}">.</td>
                 <td class="" th:text="${comment.blog.title}"></td>
                 <td th:text="${dateFormat.format(comment.issueDate)}">2019-12-03</td>
-                <td><a th:rel="${comment.id}" name="see">查看</a> <a th:rel="${comment.id}" name="delete">删除</a></td>
+                <td>
+                  <a th:rel="${comment.id}" class="btn btn-primary btn-sm" name="see">查看</a>
+                  <a th:rel="${comment.id}" class="btn btn-danger btn-sm" name="delete">删除</a></td>
               </tr>
             </tbody>
           </table>
